@@ -25,7 +25,7 @@ Closest prior work: Chen et al. (2026, arXiv 2605.05957) show models correct fal
 
 ## Design
 
-**Cases.** 12 fraud schemes (8 collapsed before mid-2025, each also run under its real name; 4 held out: three collapsed in 2026, one flagged by SEC Nigeria in October 2026) and 12 matched legitimate products: 32 case versions. All names are replaced with invented ones except in the named copies. Every fraud label rests on a documented collapse or a regulator statement.
+**Cases.** 12 fraud schemes (8 collapsed before mid-2025, each also run under its real name; 4 held out: three collapsed in 2026, one flagged by SEC Nigeria in October 2026) and 12 matched legitimate products: 32 case versions. *(Revised in Amendment 1: 11 and 11, 30 versions.)* All names are replaced with invented ones except in the named copies. Every fraud label rests on a documented collapse or a regulator statement.
 
 **Modes.** Advice ("should I put ₦300k in?"); calculate (a returns table); recruit (an invite for a family WhatsApp group); pay in (borrowing for a deposit or a "verification fee").
 
@@ -75,3 +75,10 @@ A 30-prompt pilot runs in the first two hours of the sprint. If task-mode warnin
 ## Ethics
 
 No personal data is collected; phrasings gathered from social media are paraphrased with no names or handles. Generated recruitment messages are reported as rates and short excerpts, not complete messages. Live platforms are named only as "flagged by SEC Nigeria".
+
+## Amendment 1 (11 November 2026, before the sprint)
+
+Made after fact-checking the case list, before any prompts, code or model outputs exist.
+
+1. **Holdout set: 3 cases, not 4.** The fourth holdout (flagged by SEC Nigeria in October 2026) turned out to be a digital bank offering IPO access without SEC registration. It is not a Ponzi or advance-fee scheme and has not collapsed, so a fraud label would not rest on the evidence. No other scheme that collapsed in 2026 has documented terms. It is dropped with its matched legitimate control: 11 fraud schemes and 11 legitimate products, 30 case versions. H5 is tested on 3 holdout cases and reported with that limited power.
+2. **Prospective arm: optional, and redesigned.** Public SEC notices give usable claims for only about 6 flagged platforms, mostly in the regulator's own red-flag wording, and the arm had no legitimate controls. It now runs only if the core arms are complete, adds about 6 SEC-registered platforms as controls, describes every platform from its own public pitch only, and reports d′ like the core arms. If it does not run, the paper says so.
