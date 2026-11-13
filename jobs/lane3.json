@@ -1,0 +1,43 @@
+{
+ "name": "lane 3 diagnostic: grader capacity",
+ "kind": "chat",
+ "max_tokens": 3000,
+ "limit": 4,
+ "time_budget_min": 20,
+ "prompts": "data/grading/pilot.jsonl",
+ "targets": [
+  {
+   "provider": "gemini",
+   "model": "gemini-3.1-flash-lite",
+   "output": "results/diag.jsonl",
+   "min_gap": 4
+  },
+  {
+   "provider": "groq",
+   "model": "qwen/qwen3.8-27b",
+   "output": "results/diag.jsonl"
+  },
+  {
+   "provider": "cerebras",
+   "model": "gpt-oss-120b",
+   "output": "results/diag_low.jsonl",
+   "extra": {
+    "reasoning_effort": "low"
+   }
+  },
+  {
+   "provider": "groq",
+   "model": "openai/gpt-oss-120b",
+   "output": "results/diag_low.jsonl",
+   "extra": {
+    "reasoning_effort": "low"
+   }
+  },
+  {
+   "provider": "gemini",
+   "model": "gemini-3.5-flash-lite",
+   "output": "results/diag_g.jsonl",
+   "min_gap": 4
+  }
+ ]
+}

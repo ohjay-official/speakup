@@ -117,8 +117,9 @@ def _run_target(job, t, t0):
             continue
         text, meta = chat(t["provider"], t["model"], p["messages"],
                           temperature=job.get("temperature", 0.0),
-                          max_tokens=job.get("max_tokens", 700), min_gap=t.get("min_gap"))
-        rec = {"prompt_id": p["id"], "provider": t["provider"], "model": t["model"],
+                          max_tokens=t.get("max_tokens", job.get("max_tokens", 700)), min_gap=t.get("min_gap"),
+                          extra=t.get("extra"))
+        rec = {"prompt_id": p["id"], "provider": t["provider"], "model": t["model"], "tag": t.get("tag"),
                "response": text, "meta": meta, "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         with _lock:
             with open(out_path, "a") as f:

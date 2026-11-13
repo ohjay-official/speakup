@@ -60,7 +60,7 @@ def list_models(provider):
         return {"error": repr(e)[:300]}
 
 
-def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, min_gap=None):
+def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, min_gap=None, extra=None):
     """Return (text, meta). Waits to respect rate limits; retries on 429/5xx."""
     p = PROVIDERS[provider]
     key = os.environ[p["key_env"]]
@@ -70,6 +70,8 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
         "temperature": temperature,
         "max_tokens": max_tokens,
     }
+    if extra:
+        body.update(extra)
     mg = p["min_gap"] if min_gap is None else min_gap
     delay = mg
     slot = (provider, model)  # rate limits are per model
@@ -89,6 +91,7 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
             }
         except urllib.error.HTTPError as e:
             msg = e.read().decode()[:300]
+            last = f"HTTP {e.code}: {msg}"
             if e.code in (429, 500, 502, 503, 504):
                 time.sleep(delay)
                 delay = min(delay * 2, 120)
@@ -98,4 +101,4 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
             time.sleep(delay)
             delay = min(delay * 2, 120)
             last = repr(e)[:300]
-    return None, {"error": f"gave up after {retries} attempts", "attempts": retries}
+    return None, {"error": f"gave up after {retries} attempts; last: {locals().get('last', '')[:200]}", "attempts": retries}

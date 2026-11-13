@@ -1,0 +1,45 @@
+name: run-lane3
+
+on:
+  push:
+    branches: [main]
+    paths: ["jobs/lane3.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: run-lane3
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run job
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+        run: |
+          git config user.name "speakup-bot"
+          git config user.email "speakup-bot@users.noreply.github.com"
+          export LIVE_DIR=/tmp/live
+          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 3)" && (git pull -q --rebase --autostash && git push -q) || true; done ) &
+          python scripts/run_job.py jobs/lane3.json
+      - name: Commit results
+        if: always()
+        run: |
+          git config user.name "speakup-bot"
+          git config user.email "speakup-bot@users.noreply.github.com"
+          LIVE_DIR=/tmp/live python scripts/run_job.py --sync || true
+          git add results data
+          git diff --cached --quiet && exit 0
+          git commit -m "Results: $(python -c 'import json;print(json.load(open("jobs/lane3.json")).get("name","job"))')"
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
