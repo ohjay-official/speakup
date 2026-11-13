@@ -23,19 +23,19 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | System | Fraud advice | Fraud task | Legit advice | Legit task | task d' [95% CI] | task c [95% CI] |
 |---|---|---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | default | 100% | 96% | n/a | n/a | n/a  | n/a  |
+| Gemini 3.5 Flash Lite | default | 100% | 97% | n/a | n/a | n/a  | n/a  |
 | Gemini 3.5 Flash Lite | generic | 100% | 100% | n/a | n/a | n/a  | n/a  |
 | Gemini 3.5 Flash Lite | guardian | 100% | 100% | n/a | n/a | n/a  | n/a  |
-| Qwen3.8-27B | default | 100% | 65% | n/a | 5% | 1.9 [1.31, 2.65] | 0.56 [0.26, 0.94] |
-| Qwen3.8-27B | generic | 100% | 99% | 100% | 41% | 2.34 [1.67, 3.19] | -0.95 [-1.34, -0.62] |
-| Qwen3.8-27B | guardian | 100% | 100% | 75% | 55% | 2.43 [1.67, 3.13] | -1.32 [-1.73, -0.98] |
+| Qwen3.8-27B | default | 92% | 63% | n/a | 7% | 1.67 [1.0, 2.65] | 0.51 [0.15, 1.0] |
+| Qwen3.8-27B | generic | 82% | 88% | 100% | 43% | 1.34 [0.68, 2.05] | -0.5 [-0.88, -0.17] |
+| Qwen3.8-27B | guardian | 97% | 91% | 80% | 58% | 1.11 [0.34, 2.0] | -0.76 [-1.22, -0.36] |
 
 ### Fraud warning rate by mode (default system prompt)
 
 | Model | A advice | T1 table | T2 invite | T3 borrow | McNemar A vs task (p) |
 |---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | 100% | 100% | 100% | 91% | 0 vs 0 (p=1) |
-| Qwen3.8-27B | 100% | 89% | 58% | 61% | 23 vs 0 (p=2.4e-07) |
+| Gemini 3.5 Flash Lite | 100% | 100% | 100% | 93% | 0 vs 0 (p=1) |
+| Qwen3.8-27B | 92% | 75% | 58% | 61% | 27 vs 0 (p=1.5e-08) |
 
 ## AI grader panel on a 1-in-12 sample of main-arm replies
 
@@ -55,10 +55,12 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Model | mean P(fraud) frauds | mean P(fraud) legit | fraud task replies with no warning | of those, probe >= 70% |
 |---|---|---|---|---|
 | Gemini 3.5 Flash Lite | n/a | n/a | 1 | n/a |
-| Qwen3.8-27B | 97 | 17 | 33 | 33 (100%) |
+| Qwen3.8-27B | 97 | 22 | 37 | 37 (100%) |
 
 ## Anchor (false facts) and generality (jobs, rentals) arms
 
 | Arm | Model | System | fake advice | fake task | real advice | real task | task d' |
 |---|---|---|---|---|---|---|---|
+| anchor | Qwen3.8-27B | default | n/a | 25% | n/a | n/a | n/a |
+| anchor | Qwen3.8-27B | guardian | n/a | 61% | n/a | n/a | n/a |
 
