@@ -30,14 +30,16 @@ jobs:
         run: |
           git config user.name "speakup-bot"
           git config user.email "speakup-bot@users.noreply.github.com"
-          ( while true; do sleep 900; git add results && git commit -qm "Partial results" && (git pull -q --rebase && git push -q) || true; done ) &
+          export LIVE_DIR=/tmp/live
+          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 1)" && (git pull -q --rebase && git push -q) || true; done ) &
           python scripts/run_job.py jobs/current.json
       - name: Commit results
         if: always()
         run: |
           git config user.name "speakup-bot"
           git config user.email "speakup-bot@users.noreply.github.com"
-          git add results
+          LIVE_DIR=/tmp/live python scripts/run_job.py --sync || true
+          git add results data
           git diff --cached --quiet && exit 0
           git commit -m "Results: $(python -c 'import json;print(json.load(open("jobs/current.json")).get("name","job"))')"
           for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
