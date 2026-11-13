@@ -18,9 +18,11 @@ from analyze import dprime_c, mcnemar, parse_grade  # noqa: E402
 
 R = "results"
 TESTED = {"qwen-3.8-27b": "Qwen3.8-27B", "openai/gpt-oss-20b": "gpt-oss-20b",
-          "gemini-3-flash-preview": "Gemini 3 Flash", "qwen/qwen3.8-27b": "Qwen3.8-27B"}
+          "gemini-3-flash-preview": "Gemini 3 Flash", "qwen/qwen3.8-27b": "Qwen3.8-27B",
+          "gemma-4-31b-it": "Gemma 4 31B"}
 GRADER_NAME = {"gpt-oss-120b": "gpt-oss-120b", "openai/gpt-oss-120b": "gpt-oss-120b",
-               "gemma-4-31b-it": "Gemma 4 31B", "gemini-2.5-flash": "Gemini 2.5 Flash"}
+               "gemma-4-31b-it": "Gemma 4 31B", "gemini-2.5-flash": "Gemini 2.5 Flash",
+               "gemini-3.1-flash-lite": "Gemini 3.1 Flash Lite"}
 out = {}
 md = []
 
@@ -201,7 +203,7 @@ out["grader_validation"] = {"vs_humans": gv, "inter_grader_pilot": ig}
 # ---------------------------------------------------------------- main arm
 P = prompts("main")
 main_res = {}
-for f in ("main_qwen", "main_gptoss", "main_gemini"):
+for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = grades_by_target(f"{R}/grades_main.jsonl")
 G2 = grades_by_target(f"{R}/grades_main_gemini.jsonl")

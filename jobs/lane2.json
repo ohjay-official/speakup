@@ -1,5 +1,5 @@
 {
- "name": "lane 2 pipeline: main arm (qwen, gpt-oss-20b), grading, grader panel, pushback",
+ "name": "lane 2 pipeline v2: main arm (qwen, gemma), grading, grader panel, pushback",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 330,
@@ -23,10 +23,11 @@
      "output": "results/main_qwen.jsonl"
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-20b",
+     "provider": "gemini",
+     "model": "gemma-4-31b-it",
      "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_gptoss.jsonl"
+     "output": "results/main_gemma.jsonl",
+     "min_gap": 2.2
     },
     {
      "provider": "cerebras",
@@ -42,17 +43,10 @@
     },
     {
      "provider": "gemini",
-     "model": "gemma-4-31b-it",
+     "model": "gemini-3.1-flash-lite",
      "prompts": "data/grading/pilot.jsonl",
      "output": "results/grades_panel_pilot.jsonl",
-     "min_gap": 3
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-2.5-flash",
-     "prompts": "data/grading/pilot.jsonl",
-     "output": "results/grades_panel_pilot.jsonl",
-     "min_gap": 7
+     "min_gap": 5
     }
    ]
   },
@@ -63,6 +57,7 @@
      "data/grading/main_all.jsonl",
      "--results",
      "results/main_qwen.jsonl",
+     "results/main_gemma.jsonl",
      "results/main_gptoss.jsonl",
      "--prompts",
      "data/prompts/main.jsonl"
@@ -72,6 +67,7 @@
      "data/grading/main_sample.jsonl",
      "--results",
      "results/main_qwen.jsonl",
+     "results/main_gemma.jsonl",
      "results/main_gptoss.jsonl",
      "--prompts",
      "data/prompts/main.jsonl",
@@ -103,16 +99,16 @@
     {
      "provider": "gemini",
      "model": "gemma-4-31b-it",
-     "prompts": "data/grading/main_sample.jsonl",
-     "output": "results/grades_panel_main.jsonl",
-     "min_gap": 3
+     "prompts": "data/grading/pilot.jsonl",
+     "output": "results/grades_panel_pilot.jsonl",
+     "min_gap": 2.2
     },
     {
      "provider": "gemini",
-     "model": "gemini-2.5-flash",
+     "model": "gemini-3.1-flash-lite",
      "prompts": "data/grading/main_sample.jsonl",
      "output": "results/grades_panel_main.jsonl",
-     "min_gap": 7
+     "min_gap": 5
     }
    ]
   },
@@ -122,7 +118,7 @@
      "scripts/build_pushback.py",
      "results/main_qwen.jsonl",
      "results/grades_main.jsonl",
-     "results/main_gptoss.jsonl",
+     "results/main_gemma.jsonl",
      "results/grades_main.jsonl"
     ]
    ],
@@ -134,10 +130,18 @@
      "output": "results/pushback.jsonl"
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-20b",
+     "provider": "gemini",
+     "model": "gemma-4-31b-it",
      "prompts": "data/prompts/pushback.jsonl",
-     "output": "results/pushback.jsonl"
+     "output": "results/pushback.jsonl",
+     "min_gap": 2.2
+    },
+    {
+     "provider": "gemini",
+     "model": "gemma-4-31b-it",
+     "prompts": "data/grading/main_sample.jsonl",
+     "output": "results/grades_panel_main.jsonl",
+     "min_gap": 2.2
     }
    ]
   },
