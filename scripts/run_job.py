@@ -22,6 +22,7 @@ import subprocess
 import sys
 import threading
 import time
+import zlib
 
 sys.path.insert(0, os.path.dirname(__file__))
 from providers import PROVIDERS, chat, list_models  # noqa: E402
@@ -97,9 +98,12 @@ def _run_target(job, t, t0):
     budget = job.get("time_budget_min", 330) * 60
     limit = job.get("limit")
     shard = t.get("shard")
+    any_done = {r["prompt_id"] for r in load_jsonl(out_path) if r.get("response") is not None} if t.get("skip_any") else set()
     n = fails = 0
     for idx, p in enumerate(prompts):
-        if shard and idx % shard[1] != shard[0]:
+        if shard and zlib.crc32(p["id"].encode()) % shard[1] != shard[0]:
+            continue
+        if p["id"] in any_done:
             continue
         if limit is not None and n >= limit:
             break

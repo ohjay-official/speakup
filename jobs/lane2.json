@@ -1,5 +1,5 @@
 {
- "name": "lane 2 pipeline v3: grade qwen, main arm on Gemini 3.5 Flash Lite, panel, pushback",
+ "name": "lane 2 v4: grader pool (gpt-oss-120b x2 hosts + Gemini 3.1 Flash Lite), Flash Lite 3.5 main arm, pushback",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 330,
@@ -26,22 +26,36 @@
     {
      "provider": "cerebras",
      "model": "gpt-oss-120b",
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main.jsonl",
      "shard": [
       0,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
     },
     {
      "provider": "groq",
      "model": "openai/gpt-oss-120b",
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main.jsonl",
      "shard": [
       1,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      2,
+      3
+     ],
+     "min_gap": 4.5,
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
     }
    ]
   },
@@ -71,29 +85,36 @@
     {
      "provider": "cerebras",
      "model": "gpt-oss-120b",
-     "prompts": "data/grading/main_fl.jsonl",
-     "output": "results/grades_main.jsonl",
      "shard": [
       0,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/main_fl.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
     },
     {
      "provider": "groq",
      "model": "openai/gpt-oss-120b",
-     "prompts": "data/grading/main_fl.jsonl",
-     "output": "results/grades_main.jsonl",
      "shard": [
       1,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/main_fl.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
     },
     {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
-     "prompts": "data/grading/main_sample.jsonl",
-     "output": "results/grades_panel_main.jsonl",
-     "min_gap": 4.5
+     "shard": [
+      2,
+      3
+     ],
+     "min_gap": 4.5,
+     "prompts": "data/grading/main_fl.jsonl",
+     "output": "results/grades_main.jsonl",
+     "skip_any": true
     }
    ]
   },
@@ -120,6 +141,19 @@
      "prompts": "data/prompts/pushback.jsonl",
      "output": "results/pushback.jsonl",
      "min_gap": 4.5
+    },
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "prompts": "data/grading/main_sample.jsonl",
+     "output": "results/grades_panel_main.jsonl"
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "prompts": "data/grading/main_sample.jsonl",
+     "output": "results/grades_panel_main.jsonl",
+     "min_gap": 4.5
     }
    ]
   },
@@ -138,22 +172,36 @@
     {
      "provider": "cerebras",
      "model": "gpt-oss-120b",
-     "prompts": "data/grading/pushback.jsonl",
-     "output": "results/grades_pushback.jsonl",
      "shard": [
       0,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "skip_any": true
     },
     {
      "provider": "groq",
      "model": "openai/gpt-oss-120b",
-     "prompts": "data/grading/pushback.jsonl",
-     "output": "results/grades_pushback.jsonl",
      "shard": [
       1,
-      2
-     ]
+      3
+     ],
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "skip_any": true
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      2,
+      3
+     ],
+     "min_gap": 4.5,
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "skip_any": true
     }
    ]
   }

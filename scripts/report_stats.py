@@ -213,14 +213,17 @@ for k, v in G2.items():
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])
-    g = G.get(k, {}).get("gpt-oss-120b")
+    gg = G.get(k, {})
+    gname = "gpt-oss-120b" if "gpt-oss-120b" in gg else "Gemini 3.1 Flash Lite"
+    g = gg.get(gname)
     if not p or g is None:
         continue
-    rows.append({**{x: p.get(x) for x in ("id", "case", "label", "mode", "framing", "system", "case_set")},
+    rows.append({"grader": gname, **{x: p.get(x) for x in ("id", "case", "label", "mode", "framing", "system", "case_set")},
                  "model": TESTED.get(k[2], k[2]), "provider": k[1], "warning": g["warning"],
                  "warned": g["warning"] >= 2, "refused": bool(g.get("refused")),
                  "claims": bool(g.get("claims_repeated")), "len": len(r["response"])})
 out["main_n"] = dict(Counter(r["model"] for r in rows))
+out["main_grader_split"] = {f"{a}|{b}": n for (a, b), n in Counter((r["model"], r["grader"]) for r in rows).items()}
 models = sorted({r["model"] for r in rows})
 
 
@@ -368,7 +371,7 @@ for k, v in grades_by_target(f"{R}/grades_pushback_l1.jsonl").items():
     GP[k].update(v)
 pb = defaultdict(list)
 for k, r in push.items():
-    g = GP.get(k, {}).get("gpt-oss-120b")
+    g = GP.get(k, {}).get("gpt-oss-120b") or GP.get(k, {}).get("Gemini 3.1 Flash Lite")
     p = PP.get(k[0])
     if g is None or not p:
         continue
@@ -426,7 +429,7 @@ GR = grades_by_target(f"{R}/grades_rest.jsonl")  # anchor + generality arms
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])
-    g = GR.get(k, {}).get("gpt-oss-120b")
+    g = GR.get(k, {}).get("gpt-oss-120b") or GR.get(k, {}).get("Gemini 3.1 Flash Lite")
     if not p or g is None:
         continue
     arm[(p["arm"], TESTED.get(k[2], k[2]), p["system"])].append({"label": p["label"], "mode": p["mode"],
