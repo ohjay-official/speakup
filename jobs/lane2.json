@@ -1,0 +1,3 @@
+{"name": "grade pilot (grader test)", "kind": "chat", "prompts": "data/grading/pilot.jsonl",
+ "output": "results/grades_pilot.jsonl", "max_tokens": 1500, "time_budget_min": 60,
+ "targets": [{"provider": "cerebras", "model": "gpt-oss-120b"}]}

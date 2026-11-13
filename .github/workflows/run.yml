@@ -27,7 +27,11 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
-        run: python scripts/run_job.py jobs/current.json
+        run: |
+          git config user.name "speakup-bot"
+          git config user.email "speakup-bot@users.noreply.github.com"
+          ( while true; do sleep 900; git add results && git commit -qm "Partial results" && (git pull -q --rebase && git push -q) || true; done ) &
+          python scripts/run_job.py jobs/current.json
       - name: Commit results
         if: always()
         run: |
