@@ -1,0 +1,272 @@
+{
+ "humans": {
+  "raters": [
+   "author",
+   "ferz",
+   "faze",
+   "boss p"
+  ],
+  "pairwise_kappa_warned": {
+   "author|ferz": 0.4,
+   "author|faze": 0.85,
+   "author|boss p": 0.26,
+   "ferz|faze": 0.27,
+   "ferz|boss p": 0.33,
+   "faze|boss p": 0.26
+  },
+  "fleiss_kappa_warned": 0.35,
+  "warned_counts_of_30": {
+   "author": 20,
+   "ferz": 15,
+   "faze": 20,
+   "boss p": 7
+  },
+  "majority_warned": 13,
+  "two_two_splits": 7
+ },
+ "grader_validation": {
+  "vs_humans": {
+   "Gemini 3.1 Flash Lite": {
+    "kappa_majority": 0.55,
+    "agree": 0.77,
+    "kappa_author": 1.0,
+    "n": 30,
+    "per_human": {
+     "author": 1.0,
+     "ferz": 0.4,
+     "faze": 0.85,
+     "boss p": 0.26
+    }
+   },
+   "gpt-oss-120b (cerebras)": {
+    "kappa_majority": 0.55,
+    "agree": 0.77,
+    "kappa_author": 1.0,
+    "n": 30,
+    "per_human": {
+     "author": 1.0,
+     "ferz": 0.4,
+     "faze": 0.85,
+     "boss p": 0.26
+    }
+   },
+   "gpt-oss-120b (groq)": {
+    "kappa_majority": 0.55,
+    "agree": 0.77,
+    "kappa_author": 1.0,
+    "n": 30,
+    "per_human": {
+     "author": 1.0,
+     "ferz": 0.4,
+     "faze": 0.85,
+     "boss p": 0.26
+    }
+   }
+  },
+  "inter_grader_pilot": {
+   "Gemini 3.1 Flash Lite|gpt-oss-120b (cerebras)": {
+    "kappa": 0.9,
+    "n": 74
+   },
+   "Gemini 3.1 Flash Lite|gpt-oss-120b (groq)": {
+    "kappa": 0.9,
+    "n": 74
+   },
+   "gpt-oss-120b (cerebras)|gpt-oss-120b (groq)": {
+    "kappa": 1.0,
+    "n": 74
+   }
+  }
+ },
+ "main_n": {
+  "Qwen3.8-27B": 127
+ },
+ "main": {
+  "Qwen3.8-27B|default": {
+   "n": 44,
+   "fraud_A": 0.6363636363636364,
+   "fraud_T": 0.6060606060606061,
+   "legit_A": null,
+   "legit_T": null,
+   "fraud_by_mode": {
+    "A": 0.6363636363636364,
+    "T1": 0.5454545454545454,
+    "T2": 0.7272727272727273,
+    "T3": 0.5454545454545454
+   },
+   "legit_by_mode": {
+    "A": null,
+    "T1": null,
+    "T2": null,
+    "T3": null
+   },
+   "supp_fraud": 0.030303030303030276,
+   "supp_mcnemar": {
+    "advice_only": 7,
+    "task_only": 6,
+    "p": 1.0,
+    "pairs": 33
+   },
+   "supp_ci": [
+    -0.22,
+    0.31
+   ],
+   "fraud_T_refused": 0.15151515151515152,
+   "T2_claims": 0.0,
+   "T2_claims_and_warned": 0.0,
+   "by_framing_fraud_T": {
+    "enth": 0.3333333333333333,
+    "scep": 0.7083333333333334
+   },
+   "by_set_fraud_T": {
+    "named": 0.6666666666666666,
+    "pre": 0.5555555555555556,
+    "holdout": null
+   },
+   "by_set_fraud_A": {
+    "named": 1.0,
+    "pre": 0.3333333333333333,
+    "holdout": null
+   }
+  },
+  "Qwen3.8-27B|generic": {
+   "n": 44,
+   "fraud_A": 0.6363636363636364,
+   "fraud_T": 0.7878787878787878,
+   "legit_A": null,
+   "legit_T": null,
+   "fraud_by_mode": {
+    "A": 0.6363636363636364,
+    "T1": 0.36363636363636365,
+    "T2": 1.0,
+    "T3": 1.0
+   },
+   "legit_by_mode": {
+    "A": null,
+    "T1": null,
+    "T2": null,
+    "T3": null
+   },
+   "supp_fraud": -0.1515151515151515,
+   "supp_mcnemar": {
+    "advice_only": 4,
+    "task_only": 9,
+    "p": 0.266845703125,
+    "pairs": 33
+   },
+   "supp_ci": [
+    -0.4,
+    0.1
+   ],
+   "fraud_T_refused": 0.48484848484848486,
+   "T2_claims": 0.0,
+   "T2_claims_and_warned": 0.0,
+   "by_framing_fraud_T": {
+    "enth": 0.7777777777777778,
+    "scep": 0.7916666666666666
+   },
+   "by_set_fraud_T": {
+    "named": 0.7333333333333333,
+    "pre": 0.8333333333333334,
+    "holdout": null
+   },
+   "by_set_fraud_A": {
+    "named": 0.8,
+    "pre": 0.5,
+    "holdout": null
+   }
+  },
+  "Qwen3.8-27B|guardian": {
+   "n": 39,
+   "fraud_A": 1.0,
+   "fraud_T": 0.7586206896551724,
+   "legit_A": null,
+   "legit_T": null,
+   "fraud_by_mode": {
+    "A": 1.0,
+    "T1": 0.4,
+    "T2": 1.0,
+    "T3": 0.8888888888888888
+   },
+   "legit_by_mode": {
+    "A": null,
+    "T1": null,
+    "T2": null,
+    "T3": null
+   },
+   "supp_fraud": 0.24137931034482762,
+   "supp_mcnemar": {
+    "advice_only": 7,
+    "task_only": 0,
+    "p": 0.015625,
+    "pairs": 29
+   },
+   "supp_ci": [
+    0.08,
+    0.41
+   ],
+   "fraud_T_refused": 0.6206896551724138,
+   "T2_claims": 0.0,
+   "T2_claims_and_warned": 0.0,
+   "by_framing_fraud_T": {
+    "enth": 0.75,
+    "scep": 0.7619047619047619
+   },
+   "by_set_fraud_T": {
+    "named": 0.6666666666666666,
+    "pre": 0.8235294117647058,
+    "holdout": null
+   },
+   "by_set_fraud_A": {
+    "named": 1.0,
+    "pre": 1.0,
+    "holdout": null
+   }
+  }
+ },
+ "fixes_vs_default_task": {
+  "Qwen3.8-27B|generic": {
+   "fraud": {
+    "fix_only": 9,
+    "default_only": 3,
+    "p": 0.14599609375,
+    "n": 33
+   },
+   "legit": {
+    "fix_only": 0,
+    "default_only": 0,
+    "p": 1.0,
+    "n": 0
+   }
+  },
+  "Qwen3.8-27B|guardian": {
+   "fraud": {
+    "fix_only": 7,
+    "default_only": 2,
+    "p": 0.1796875,
+    "n": 29
+   },
+   "legit": {
+    "fix_only": 0,
+    "default_only": 0,
+    "p": 1.0,
+    "n": 0
+   }
+  }
+ },
+ "grader_panel_main": {
+  "pairwise": {},
+  "warned_rate_by_grader_and_model": {}
+ },
+ "pushback": {},
+ "probe": {
+  "Qwen3.8-27B": {
+   "probe_fraud_mean": null,
+   "probe_legit_mean": null,
+   "silent": 13,
+   "knew": 0,
+   "probe_n": 0
+  }
+ },
+ "arms": {}
+}

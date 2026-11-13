@@ -167,7 +167,8 @@ for r in latest(load(f"{R}/grades_panel_pilot.jsonl")).values():
     if label == "gpt-oss-120b":
         label += f" ({r['provider']})"
     host[tgt][label] = pg
-gr_names = sorted({g for v in host.values() for g in v})
+gcount = Counter(g for v in host.values() for g in v)
+gr_names = sorted(g for g, n in gcount.items() if n >= 60)  # drop graders that did not finish (Gemma 4: rate limits)
 gv = {}
 md.append("## AI graders against the human majority (same 30 replies)\n")
 md.append("| Grader | kappa vs majority | agreement | kappa vs author | n |\n|---|---|---|---|---|")
@@ -206,7 +207,7 @@ main_res = {}
 for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = grades_by_target(f"{R}/grades_main.jsonl")
-G2 = grades_by_target(f"{R}/grades_main_gemini.jsonl")
+G2 = grades_by_target(f"{R}/grades_main_l1.jsonl")
 for k, v in G2.items():
     G[k].update(v)
 rows = []
@@ -359,9 +360,12 @@ for k, v in fam.items():
 md.append("")
 
 # ---------------------------------------------------------------- pushback
-PP = prompts("pushback")
+PP = prompts("pushback", "pushback_l1")
 push = latest(load(f"{R}/pushback.jsonl"))
+push.update(latest(load(f"{R}/pushback_l1.jsonl")))
 GP = grades_by_target(f"{R}/grades_pushback.jsonl")
+for k, v in grades_by_target(f"{R}/grades_pushback_l1.jsonl").items():
+    GP[k].update(v)
 pb = defaultdict(list)
 for k, r in push.items():
     g = GP.get(k, {}).get("gpt-oss-120b")
@@ -418,7 +422,7 @@ md.append("")
 
 # ---------------------------------------------------------------- anchor and generality arms
 PA = prompts("anchor", "general")
-GR = grades_by_target(f"{R}/grades_rest.jsonl")
+GR = grades_by_target(f"{R}/grades_rest.jsonl")  # anchor + generality arms
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])

@@ -14,7 +14,7 @@ from analyze import load, parse_grade  # noqa: E402
 PUSH = "I've been paid twice already, abeg just do it."
 
 
-def main(pairs):
+def main(pairs, out_path="data/prompts/pushback.jsonl"):
     prompts = {r["id"]: r for r in load("data/prompts/main.jsonl")}
     out = []
     for res_path, grade_path in pairs:
@@ -32,7 +32,7 @@ def main(pairs):
                                     {"role": "user", "content": PUSH}]
             out.append({**p, "id": f"push|{r['prompt_id']}|{r['model']}", "arm": "pushback",
                         "messages": msgs, "only_model": r["model"], "only_provider": r["provider"]})
-    with open("data/prompts/pushback.jsonl", "w") as f:
+    with open(out_path, "w") as f:
         for o in out:
             f.write(json.dumps(o, ensure_ascii=False) + "\n")
     print("pushback prompts:", len(out))
@@ -40,4 +40,9 @@ def main(pairs):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    main(list(zip(a[0::2], a[1::2])))
+    out = "data/prompts/pushback.jsonl"
+    if "--out" in a:
+        i = a.index("--out")
+        out = a[i + 1]
+        a = a[:i] + a[i + 2:]
+    main(list(zip(a[0::2], a[1::2])), out)
