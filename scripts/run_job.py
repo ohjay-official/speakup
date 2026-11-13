@@ -131,7 +131,8 @@ def _run_target(job, t, t0):
         if text is None:
             fails += 1
             err = meta.get("error", "")
-            if ("HTTP 4" in err and "429" not in err) or fails >= 25:
+            daily = any(x in err for x in ("exceeded your current quota", "per day", "tokens per day", "requests per day"))
+            if ("HTTP 4" in err and "429" not in err) or daily or fails >= 25:
                 print("stopping target after errors:", t, err, flush=True)
                 break
     print(t, "new calls:", n, "failed:", fails, flush=True)
