@@ -1,11 +1,8 @@
-{"name": "pilot 30 prompts x 5 models", "kind": "chat",
- "prompts": "data/prompts/pilot.jsonl",
- "output": "results/pilot.jsonl",
- "max_tokens": 2000, "time_budget_min": 120,
+{"name": "main arm: gpt-oss-20b (Groq) and qwen3.8-27b (Cerebras)", "kind": "chat",
+ "prompts": "data/prompts/main.jsonl",
+ "output": "results/main.jsonl",
+ "max_tokens": 3000, "time_budget_min": 300,
  "targets": [
   {"provider": "groq", "model": "openai/gpt-oss-20b"},
-  {"provider": "groq", "model": "qwen/qwen3.8-27b"},
-  {"provider": "gemini", "model": "gemini-3-flash-preview"},
-  {"provider": "gemini", "model": "gemini-3.8-flash"},
-  {"provider": "gemini", "model": "gemma-4-31b-it"}
+  {"provider": "cerebras", "model": "qwen-3.8-27b"}
  ]}
