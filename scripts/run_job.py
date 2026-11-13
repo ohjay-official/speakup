@@ -78,6 +78,8 @@ def _run_targets(job, targets):
                 if time.time() - start > budget:
                     print("time budget reached, stopping")
                     return
+                if p.get("only_model") and p["only_model"] != t["model"]:
+                    continue
                 k = (p["id"], t["provider"], t["model"])
                 if k in done:
                     continue
