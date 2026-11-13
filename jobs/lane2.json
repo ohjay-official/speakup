@@ -1,5 +1,5 @@
 {
- "name": "lane 2 pipeline v2: main arm (qwen, gemma), grading, grader panel, pushback",
+ "name": "lane 2 pipeline v3: grade qwen, main arm on Gemini 3.5 Flash Lite, panel, pushback",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 330,
@@ -8,45 +8,40 @@
    "pre": [
     [
      "scripts/build_grading.py",
-     "data/grading/pilot.jsonl",
+     "data/grading/main_qwen.jsonl",
      "--results",
-     "results/pilot.jsonl",
+     "results/main_qwen.jsonl",
      "--prompts",
-     "data/prompts/pilot.jsonl"
+     "data/prompts/main.jsonl"
     ]
    ],
    "targets": [
     {
-     "provider": "cerebras",
-     "model": "qwen-3.8-27b",
-     "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_qwen.jsonl"
-    },
-    {
      "provider": "gemini",
-     "model": "gemma-4-31b-it",
+     "model": "gemini-3.5-flash-lite",
      "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_gemma.jsonl",
-     "min_gap": 2.2
+     "output": "results/main_flashlite.jsonl",
+     "min_gap": 4.5
     },
     {
      "provider": "cerebras",
      "model": "gpt-oss-120b",
-     "prompts": "data/grading/pilot.jsonl",
-     "output": "results/grades_panel_pilot.jsonl"
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main.jsonl",
+     "shard": [
+      0,
+      2
+     ]
     },
     {
      "provider": "groq",
      "model": "openai/gpt-oss-120b",
-     "prompts": "data/grading/pilot.jsonl",
-     "output": "results/grades_panel_pilot.jsonl"
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.1-flash-lite",
-     "prompts": "data/grading/pilot.jsonl",
-     "output": "results/grades_panel_pilot.jsonl",
-     "min_gap": 5
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main.jsonl",
+     "shard": [
+      1,
+      2
+     ]
     }
    ]
   },
@@ -54,11 +49,9 @@
    "pre": [
     [
      "scripts/build_grading.py",
-     "data/grading/main_all.jsonl",
+     "data/grading/main_fl.jsonl",
      "--results",
-     "results/main_qwen.jsonl",
-     "results/main_gemma.jsonl",
-     "results/main_gptoss.jsonl",
+     "results/main_flashlite.jsonl",
      "--prompts",
      "data/prompts/main.jsonl"
     ],
@@ -67,8 +60,7 @@
      "data/grading/main_sample.jsonl",
      "--results",
      "results/main_qwen.jsonl",
-     "results/main_gemma.jsonl",
-     "results/main_gptoss.jsonl",
+     "results/main_flashlite.jsonl",
      "--prompts",
      "data/prompts/main.jsonl",
      "--every",
@@ -79,7 +71,7 @@
     {
      "provider": "cerebras",
      "model": "gpt-oss-120b",
-     "prompts": "data/grading/main_all.jsonl",
+     "prompts": "data/grading/main_fl.jsonl",
      "output": "results/grades_main.jsonl",
      "shard": [
       0,
@@ -89,7 +81,7 @@
     {
      "provider": "groq",
      "model": "openai/gpt-oss-120b",
-     "prompts": "data/grading/main_all.jsonl",
+     "prompts": "data/grading/main_fl.jsonl",
      "output": "results/grades_main.jsonl",
      "shard": [
       1,
@@ -98,17 +90,10 @@
     },
     {
      "provider": "gemini",
-     "model": "gemma-4-31b-it",
-     "prompts": "data/grading/pilot.jsonl",
-     "output": "results/grades_panel_pilot.jsonl",
-     "min_gap": 2.2
-    },
-    {
-     "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "prompts": "data/grading/main_sample.jsonl",
      "output": "results/grades_panel_main.jsonl",
-     "min_gap": 5
+     "min_gap": 4.5
     }
    ]
   },
@@ -118,7 +103,7 @@
      "scripts/build_pushback.py",
      "results/main_qwen.jsonl",
      "results/grades_main.jsonl",
-     "results/main_gemma.jsonl",
+     "results/main_flashlite.jsonl",
      "results/grades_main.jsonl"
     ]
    ],
@@ -131,17 +116,10 @@
     },
     {
      "provider": "gemini",
-     "model": "gemma-4-31b-it",
+     "model": "gemini-3.5-flash-lite",
      "prompts": "data/prompts/pushback.jsonl",
      "output": "results/pushback.jsonl",
-     "min_gap": 2.2
-    },
-    {
-     "provider": "gemini",
-     "model": "gemma-4-31b-it",
-     "prompts": "data/grading/main_sample.jsonl",
-     "output": "results/grades_panel_main.jsonl",
-     "min_gap": 2.2
+     "min_gap": 4.5
     }
    ]
   },
