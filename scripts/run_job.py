@@ -39,6 +39,28 @@ def run_list_models(job):
 
 
 def run_chat(job):
+    """Targets run in parallel, one thread per provider; each stage in order."""
+    import threading
+    stages = job.get("stages") or [job]
+    for st in stages:
+        full = {**job, **st}
+        by_prov = {}
+        for t in full["targets"]:
+            by_prov.setdefault(t["provider"], []).append(t)
+        threads = [threading.Thread(target=_run_targets, args=(full, ts)) for ts in by_prov.values()]
+        for th in threads:
+            th.start()
+        for th in threads:
+            th.join()
+
+
+import threading  # noqa: E402
+
+_lock = threading.Lock()
+
+
+def _run_targets(job, targets):
+    job = {**job, "targets": targets}
     prompts = load_jsonl(job["prompts"])
     out_path = job["output"]
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -64,8 +86,9 @@ def run_chat(job):
                                   max_tokens=job.get("max_tokens", 700))
                 rec = {"prompt_id": p["id"], "provider": t["provider"], "model": t["model"],
                        "response": text, "meta": meta, "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
-                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                f.flush()
+                with _lock:
+                    f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                    f.flush()
                 n += 1
                 if text is None and "HTTP 4" in meta.get("error", "") and "429" not in meta.get("error", ""):
                     print("hard error, skipping target:", t, meta["error"])

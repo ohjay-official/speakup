@@ -1,8 +1,11 @@
-{"name": "main arm: gpt-oss-20b (Groq) and qwen3.8-27b (Cerebras)", "kind": "chat",
- "prompts": "data/prompts/main.jsonl",
- "output": "results/main.jsonl",
- "max_tokens": 3000, "time_budget_min": 300,
- "targets": [
-  {"provider": "groq", "model": "openai/gpt-oss-20b"},
-  {"provider": "cerebras", "model": "qwen-3.8-27b"}
+{"name": "extra arms on 3 models + main arm on Gemini 3 Flash", "kind": "chat",
+ "max_tokens": 3000, "time_budget_min": 330,
+ "stages": [
+  {"prompts": "data/prompts/rest.jsonl", "output": "results/rest.jsonl",
+   "targets": [
+    {"provider": "groq", "model": "openai/gpt-oss-20b"},
+    {"provider": "cerebras", "model": "qwen-3.8-27b"},
+    {"provider": "gemini", "model": "gemini-3-flash-preview"}]},
+  {"prompts": "data/prompts/main.jsonl", "output": "results/main_gemini.jsonl",
+   "targets": [{"provider": "gemini", "model": "gemini-3-flash-preview"}]}
  ]}
