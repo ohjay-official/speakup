@@ -1,5 +1,5 @@
 {
- "name": "lane 3: Flash Lite 3.5 main arm, grade Qwen and Flash Lite (gpt-oss-120b + Gemini 3.1 Flash Lite pool), pushback",
+ "name": "lane 3 v2: grade Qwen and Flash Lite replies; Qwen pushback",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 330,
@@ -8,62 +8,9 @@
    "pre": [
     [
      "scripts/build_grading.py",
-     "data/grading/main_qwen.jsonl",
+     "data/grading/main_ql.jsonl",
      "--results",
      "results/main_qwen.jsonl",
-     "--prompts",
-     "data/prompts/main.jsonl"
-    ]
-   ],
-   "targets": [
-    {
-     "provider": "gemini",
-     "model": "gemini-3.5-flash-lite",
-     "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_flashlite.jsonl",
-     "min_gap": 4
-    },
-    {
-     "provider": "cerebras",
-     "model": "gpt-oss-120b",
-     "shard": [
-      0,
-      2
-     ],
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main_l3.jsonl",
-     "skip_any": true,
-     "skip_files": [
-      "results/grades_main.jsonl",
-      "results/grades_main_l1.jsonl",
-      "results/grades_main_l3.jsonl"
-     ]
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.1-flash-lite",
-     "shard": [
-      1,
-      2
-     ],
-     "min_gap": 4,
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main_l3.jsonl",
-     "skip_any": true,
-     "skip_files": [
-      "results/grades_main.jsonl",
-      "results/grades_main_l1.jsonl",
-      "results/grades_main_l3.jsonl"
-     ]
-    }
-   ]
-  },
-  {
-   "pre": [
-    [
-     "scripts/build_grading.py",
-     "data/grading/main_fl.jsonl",
-     "--results",
      "results/main_flashlite.jsonl",
      "--prompts",
      "data/prompts/main.jsonl"
@@ -77,7 +24,7 @@
       0,
       2
      ],
-     "prompts": "data/grading/main_fl.jsonl",
+     "prompts": "data/grading/main_ql.jsonl",
      "output": "results/grades_main_l3.jsonl",
      "skip_any": true,
      "skip_files": [
@@ -94,7 +41,7 @@
       2
      ],
      "min_gap": 4,
-     "prompts": "data/grading/main_fl.jsonl",
+     "prompts": "data/grading/main_ql.jsonl",
      "output": "results/grades_main_l3.jsonl",
      "skip_any": true,
      "skip_files": [
@@ -114,8 +61,6 @@
     [
      "scripts/build_pushback.py",
      "results/main_qwen.jsonl",
-     "results/grades_all.jsonl",
-     "results/main_flashlite.jsonl",
      "results/grades_all.jsonl"
     ]
    ],
@@ -125,13 +70,6 @@
      "model": "qwen-3.8-27b",
      "prompts": "data/prompts/pushback.jsonl",
      "output": "results/pushback.jsonl"
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.5-flash-lite",
-     "prompts": "data/prompts/pushback.jsonl",
-     "output": "results/pushback.jsonl",
-     "min_gap": 4
     }
    ]
   },
