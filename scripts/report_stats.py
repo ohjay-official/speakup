@@ -207,9 +207,9 @@ main_res = {}
 for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = grades_by_target(f"{R}/grades_main.jsonl")
-G2 = grades_by_target(f"{R}/grades_main_l1.jsonl")
-for k, v in G2.items():
-    G[k].update(v)
+for extra in ("grades_main_l1.jsonl", "grades_main_l3.jsonl"):
+    for k, v in grades_by_target(f"{R}/{extra}").items():
+        G[k].update(v)
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])

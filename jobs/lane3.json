@@ -1,43 +1,178 @@
 {
- "name": "lane 3 diagnostic: grader capacity",
+ "name": "lane 3: Flash Lite 3.5 main arm, grade Qwen and Flash Lite (gpt-oss-120b + Gemini 3.1 Flash Lite pool), pushback",
  "kind": "chat",
  "max_tokens": 3000,
- "limit": 4,
- "time_budget_min": 20,
- "prompts": "data/grading/pilot.jsonl",
- "targets": [
+ "time_budget_min": 330,
+ "stages": [
   {
-   "provider": "gemini",
-   "model": "gemini-3.1-flash-lite",
-   "output": "results/diag.jsonl",
-   "min_gap": 4
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/main_qwen.jsonl",
+     "--results",
+     "results/main_qwen.jsonl",
+     "--prompts",
+     "data/prompts/main.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "gemini",
+     "model": "gemini-3.5-flash-lite",
+     "prompts": "data/prompts/main.jsonl",
+     "output": "results/main_flashlite.jsonl",
+     "min_gap": 4
+    },
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "shard": [
+      0,
+      2
+     ],
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main_l3.jsonl",
+     "skip_any": true,
+     "skip_files": [
+      "results/grades_main.jsonl",
+      "results/grades_main_l1.jsonl",
+      "results/grades_main_l3.jsonl"
+     ]
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      1,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/main_qwen.jsonl",
+     "output": "results/grades_main_l3.jsonl",
+     "skip_any": true,
+     "skip_files": [
+      "results/grades_main.jsonl",
+      "results/grades_main_l1.jsonl",
+      "results/grades_main_l3.jsonl"
+     ]
+    }
+   ]
   },
   {
-   "provider": "groq",
-   "model": "qwen/qwen3.8-27b",
-   "output": "results/diag.jsonl"
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/main_fl.jsonl",
+     "--results",
+     "results/main_flashlite.jsonl",
+     "--prompts",
+     "data/prompts/main.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "shard": [
+      0,
+      2
+     ],
+     "prompts": "data/grading/main_fl.jsonl",
+     "output": "results/grades_main_l3.jsonl",
+     "skip_any": true,
+     "skip_files": [
+      "results/grades_main.jsonl",
+      "results/grades_main_l1.jsonl",
+      "results/grades_main_l3.jsonl"
+     ]
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      1,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/main_fl.jsonl",
+     "output": "results/grades_main_l3.jsonl",
+     "skip_any": true,
+     "skip_files": [
+      "results/grades_main.jsonl",
+      "results/grades_main_l1.jsonl",
+      "results/grades_main_l3.jsonl"
+     ]
+    }
+   ]
   },
   {
-   "provider": "cerebras",
-   "model": "gpt-oss-120b",
-   "output": "results/diag_low.jsonl",
-   "extra": {
-    "reasoning_effort": "low"
-   }
+   "pre": [
+    [
+     "-c",
+     "import glob\nopen('results/grades_all.jsonl','w').write(''.join(open(f).read() for f in sorted(glob.glob('results/grades_main*.jsonl'))))"
+    ],
+    [
+     "scripts/build_pushback.py",
+     "results/main_qwen.jsonl",
+     "results/grades_all.jsonl",
+     "results/main_flashlite.jsonl",
+     "results/grades_all.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "qwen-3.8-27b",
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl"
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.5-flash-lite",
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl",
+     "min_gap": 4
+    }
+   ]
   },
   {
-   "provider": "groq",
-   "model": "openai/gpt-oss-120b",
-   "output": "results/diag_low.jsonl",
-   "extra": {
-    "reasoning_effort": "low"
-   }
-  },
-  {
-   "provider": "gemini",
-   "model": "gemini-3.5-flash-lite",
-   "output": "results/diag_g.jsonl",
-   "min_gap": 4
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/pushback.jsonl",
+     "--results",
+     "results/pushback.jsonl",
+     "--prompts",
+     "data/prompts/pushback.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "shard": [
+      0,
+      2
+     ],
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "skip_any": true,
+     "skip_files": []
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      1,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "skip_any": true,
+     "skip_files": []
+    }
+   ]
   }
  ]
 }
