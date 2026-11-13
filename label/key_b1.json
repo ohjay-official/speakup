@@ -1,0 +1,202 @@
+{
+ "b1_00": {
+  "prompt_id": "main|F6a|T1|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_01": {
+  "prompt_id": "main|F5a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_02": {
+  "prompt_id": "main|F8a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_03": {
+  "prompt_id": "main|F11a|T1|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_04": {
+  "prompt_id": "main|F10a|T2|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_05": {
+  "prompt_id": "main|F1a|T1|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_06": {
+  "prompt_id": "main|F9a|T1|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_07": {
+  "prompt_id": "main|F4a|T1|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_08": {
+  "prompt_id": "main|F8a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_09": {
+  "prompt_id": "main|F3a|T2|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_10": {
+  "prompt_id": "main|F8a|T1|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_11": {
+  "prompt_id": "main|F4a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_12": {
+  "prompt_id": "main|F4a|T2|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_13": {
+  "prompt_id": "main|F5a|A|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_14": {
+  "prompt_id": "main|F2a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_15": {
+  "prompt_id": "main|F6a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_16": {
+  "prompt_id": "main|F3a|A|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_17": {
+  "prompt_id": "main|F4a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_18": {
+  "prompt_id": "main|F6a|A|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_19": {
+  "prompt_id": "main|F3a|T1|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_20": {
+  "prompt_id": "main|F11a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_21": {
+  "prompt_id": "main|F1a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_22": {
+  "prompt_id": "main|F9a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_23": {
+  "prompt_id": "main|F7a|A|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_24": {
+  "prompt_id": "main|F11a|T2|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_25": {
+  "prompt_id": "main|F3a|T2|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_26": {
+  "prompt_id": "main|F5a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_27": {
+  "prompt_id": "main|F6a|A|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_28": {
+  "prompt_id": "main|F1a|T1|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_29": {
+  "prompt_id": "main|F9a|T2|enth|default",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b"
+ },
+ "b1_30": {
+  "prompt_id": "main|F3a|A|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_31": {
+  "prompt_id": "main|F7a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_32": {
+  "prompt_id": "main|F1a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_33": {
+  "prompt_id": "main|F7a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_34": {
+  "prompt_id": "main|F2a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_35": {
+  "prompt_id": "main|F9a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_36": {
+  "prompt_id": "main|F8a|T2|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ },
+ "b1_37": {
+  "prompt_id": "main|F8a|T1|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_38": {
+  "prompt_id": "main|F3a|T1|enth|default",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b"
+ },
+ "b1_39": {
+  "prompt_id": "main|F11a|T1|enth|default",
+  "provider": "gemini",
+  "model": "gemini-3-flash-preview"
+ }
+}
