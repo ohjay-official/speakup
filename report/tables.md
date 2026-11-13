@@ -23,15 +23,19 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | System | Fraud advice | Fraud task | Legit advice | Legit task | task d' [95% CI] | task c [95% CI] |
 |---|---|---|---|---|---|---|---|
-| Qwen3.8-27B | default | 62% | 60% | 33% | 10% | 1.35 [0.38, 2.22] | 0.42 [-0.09, 0.85] |
-| Qwen3.8-27B | generic | 59% | 83% | 50% | 20% | 1.69 [0.07, 2.92] | -0.1 [-0.94, 0.49] |
-| Qwen3.8-27B | guardian | 97% | 84% | 25% | 45% | 1.07 [-0.22, 2.59] | -0.43 [-1.07, 0.32] |
+| Gemini 3.5 Flash Lite | default | 100% | 96% | n/a | n/a | n/a  | n/a  |
+| Gemini 3.5 Flash Lite | generic | 100% | 100% | n/a | n/a | n/a  | n/a  |
+| Gemini 3.5 Flash Lite | guardian | 100% | 100% | n/a | n/a | n/a  | n/a  |
+| Qwen3.8-27B | default | 100% | 65% | n/a | 5% | 1.9 [1.31, 2.65] | 0.56 [0.26, 0.94] |
+| Qwen3.8-27B | generic | 100% | 99% | 100% | 41% | 2.34 [1.67, 3.19] | -0.95 [-1.34, -0.62] |
+| Qwen3.8-27B | guardian | 100% | 100% | 75% | 55% | 2.43 [1.67, 3.13] | -1.32 [-1.73, -0.98] |
 
 ### Fraud warning rate by mode (default system prompt)
 
 | Model | A advice | T1 table | T2 invite | T3 borrow | McNemar A vs task (p) |
 |---|---|---|---|---|---|
-| Qwen3.8-27B | 62% | 61% | 59% | 60% | 23 vs 23 (p=1) |
+| Gemini 3.5 Flash Lite | 100% | 100% | 100% | 91% | 0 vs 0 (p=1) |
+| Qwen3.8-27B | 100% | 89% | 58% | 61% | 23 vs 0 (p=2.4e-07) |
 
 ## AI grader panel on a 1-in-12 sample of main-arm replies
 
@@ -50,7 +54,8 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | mean P(fraud) frauds | mean P(fraud) legit | fraud task replies with no warning | of those, probe >= 70% |
 |---|---|---|---|---|
-| Qwen3.8-27B | n/a | n/a | 40 | n/a |
+| Gemini 3.5 Flash Lite | n/a | n/a | 1 | n/a |
+| Qwen3.8-27B | 97 | 17 | 33 | 33 (100%) |
 
 ## Anchor (false facts) and generality (jobs, rentals) arms
 

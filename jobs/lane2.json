@@ -1,61 +1,23 @@
 {
- "name": "lane 2 v4: grader pool (gpt-oss-120b x2 hosts + Gemini 3.1 Flash Lite), Flash Lite 3.5 main arm, pushback",
+ "name": "lane 2 v5: redo Qwen replies that ran out of tokens (238 main, 45 extra arms) with 8000 tokens; grade; Qwen pushback",
  "kind": "chat",
- "max_tokens": 3000,
+ "max_tokens": 8000,
  "time_budget_min": 330,
  "stages": [
   {
-   "pre": [
-    [
-     "scripts/build_grading.py",
-     "data/grading/main_qwen.jsonl",
-     "--results",
-     "results/main_qwen.jsonl",
-     "--prompts",
-     "data/prompts/main.jsonl"
-    ]
-   ],
    "targets": [
     {
-     "provider": "gemini",
-     "model": "gemini-3.5-flash-lite",
+     "provider": "cerebras",
+     "model": "qwen-3.8-27b",
      "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_flashlite.jsonl",
-     "min_gap": 4.5
+     "output": "results/main_qwen.jsonl"
     },
     {
      "provider": "cerebras",
-     "model": "gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
-    },
-    {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      1,
-      3
-     ],
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.1-flash-lite",
-     "shard": [
-      2,
-      3
-     ],
-     "min_gap": 4.5,
-     "prompts": "data/grading/main_qwen.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
+     "model": "qwen-3.8-27b",
+     "prompts": "data/prompts/rest.jsonl",
+     "output": "results/rest.jsonl",
+     "tag": "rest"
     }
    ]
   },
@@ -63,22 +25,24 @@
    "pre": [
     [
      "scripts/build_grading.py",
-     "data/grading/main_fl.jsonl",
+     "data/grading/main_qwen_v2.jsonl",
      "--results",
-     "results/main_flashlite.jsonl",
+     "results/main_qwen.jsonl",
      "--prompts",
-     "data/prompts/main.jsonl"
+     "data/prompts/main.jsonl",
+     "--since",
+     "2026-11-13T23:45"
     ],
     [
      "scripts/build_grading.py",
-     "data/grading/main_sample.jsonl",
+     "data/grading/rest_q.jsonl",
      "--results",
-     "results/main_qwen.jsonl",
-     "results/main_flashlite.jsonl",
+     "results/rest.jsonl",
      "--prompts",
-     "data/prompts/main.jsonl",
-     "--every",
-     "12"
+     "data/prompts/anchor.jsonl",
+     "data/prompts/general.jsonl",
+     "--since",
+     "2026-11-13T23:45"
     ]
    ],
    "targets": [
@@ -87,45 +51,63 @@
      "model": "gpt-oss-120b",
      "shard": [
       0,
-      3
+      2
      ],
-     "prompts": "data/grading/main_fl.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
-    },
-    {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      1,
-      3
-     ],
-     "prompts": "data/grading/main_fl.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
+     "prompts": "data/grading/main_qwen_v2.jsonl",
+     "output": "results/grades_main_v2.jsonl",
+     "skip_any": true,
+     "skip_files": []
     },
     {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
-     "min_gap": 4.5,
-     "prompts": "data/grading/main_fl.jsonl",
-     "output": "results/grades_main.jsonl",
-     "skip_any": true
+     "min_gap": 4,
+     "prompts": "data/grading/main_qwen_v2.jsonl",
+     "output": "results/grades_main_v2.jsonl",
+     "skip_any": true,
+     "skip_files": []
+    },
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "shard": [
+      0,
+      2
+     ],
+     "prompts": "data/grading/rest_q.jsonl",
+     "output": "results/grades_rest_v2.jsonl",
+     "skip_any": true,
+     "skip_files": []
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      1,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/rest_q.jsonl",
+     "output": "results/grades_rest_v2.jsonl",
+     "skip_any": true,
+     "skip_files": []
     }
    ]
   },
   {
    "pre": [
     [
+     "-c",
+     "import glob\nopen('results/grades_all.jsonl','w').write(''.join(open(f).read() for f in sorted(glob.glob('results/grades_main*.jsonl'))))"
+    ],
+    [
      "scripts/build_pushback.py",
      "results/main_qwen.jsonl",
-     "results/grades_main.jsonl",
-     "results/main_flashlite.jsonl",
-     "results/grades_main.jsonl"
+     "results/grades_all.jsonl"
     ]
    ],
    "targets": [
@@ -134,26 +116,6 @@
      "model": "qwen-3.8-27b",
      "prompts": "data/prompts/pushback.jsonl",
      "output": "results/pushback.jsonl"
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.5-flash-lite",
-     "prompts": "data/prompts/pushback.jsonl",
-     "output": "results/pushback.jsonl",
-     "min_gap": 4.5
-    },
-    {
-     "provider": "cerebras",
-     "model": "gpt-oss-120b",
-     "prompts": "data/grading/main_sample.jsonl",
-     "output": "results/grades_panel_main.jsonl"
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.1-flash-lite",
-     "prompts": "data/grading/main_sample.jsonl",
-     "output": "results/grades_panel_main.jsonl",
-     "min_gap": 4.5
     }
    ]
   },
@@ -174,34 +136,25 @@
      "model": "gpt-oss-120b",
      "shard": [
       0,
-      3
+      2
      ],
      "prompts": "data/grading/pushback.jsonl",
      "output": "results/grades_pushback.jsonl",
-     "skip_any": true
-    },
-    {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      1,
-      3
-     ],
-     "prompts": "data/grading/pushback.jsonl",
-     "output": "results/grades_pushback.jsonl",
-     "skip_any": true
+     "skip_any": true,
+     "skip_files": []
     },
     {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
-     "min_gap": 4.5,
+     "min_gap": 4,
      "prompts": "data/grading/pushback.jsonl",
      "output": "results/grades_pushback.jsonl",
-     "skip_any": true
+     "skip_any": true,
+     "skip_files": []
     }
    ]
   }

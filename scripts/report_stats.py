@@ -52,7 +52,7 @@ def latest(rows):
     """Last successful record per (prompt_id, provider, model)."""
     d = {}
     for r in rows:
-        if r.get("response") is not None:
+        if r.get("response"):  # drop failed and empty replies
             d[(r["prompt_id"], r["provider"], r["model"])] = r
     return d
 
@@ -207,9 +207,9 @@ main_res = {}
 for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = grades_by_target(f"{R}/grades_main.jsonl")
-for extra in ("grades_main_l1.jsonl", "grades_main_l3.jsonl"):
+for extra in ("grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl"):
     for k, v in grades_by_target(f"{R}/{extra}").items():
-        G[k].update(v)
+        G[k] = v if extra.endswith("v2.jsonl") else {**G[k], **v}  # v2 regrades replies that were empty before
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])
@@ -426,6 +426,8 @@ md.append("")
 # ---------------------------------------------------------------- anchor and generality arms
 PA = prompts("anchor", "general")
 GR = grades_by_target(f"{R}/grades_rest.jsonl")  # anchor + generality arms
+for k, v in grades_by_target(f"{R}/grades_rest_v2.jsonl").items():
+    GR[k] = v
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])

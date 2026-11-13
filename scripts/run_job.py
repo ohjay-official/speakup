@@ -94,14 +94,14 @@ def _run_target(job, t, t0):
     out_path = live_path(t.get("output") or job["output"])
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     done = {(r["prompt_id"], r["provider"], r["model"]) for r in load_jsonl(out_path)
-            if r.get("response") is not None}
+            if r.get("response")}  # empty replies (all tokens spent thinking) are retried
     budget = job.get("time_budget_min", 330) * 60
     limit = job.get("limit")
     shard = t.get("shard")
     any_done = set()
     if t.get("skip_any"):
         for fp in [out_path] + [live_path(x) for x in t.get("skip_files", [])]:
-            any_done |= {r["prompt_id"] for r in load_jsonl(fp) if r.get("response") is not None}
+            any_done |= {r["prompt_id"] for r in load_jsonl(fp) if r.get("response")}
     n = fails = 0
     for idx, p in enumerate(prompts):
         if shard and zlib.crc32(p["id"].encode()) % shard[1] != shard[0]:
