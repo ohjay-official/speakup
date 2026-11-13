@@ -1,3 +1,179 @@
-{"name": "main arm: qwen-3.8-27b on Cerebras", "kind": "chat", "prompts": "data/prompts/main.jsonl",
- "output": "results/main_qwen.jsonl", "max_tokens": 3000, "time_budget_min": 330,
- "targets": [{"provider": "cerebras", "model": "qwen-3.8-27b"}]}
+{
+ "name": "lane 2 pipeline: main arm (qwen, gpt-oss-20b), grading, grader panel, pushback",
+ "kind": "chat",
+ "max_tokens": 3000,
+ "time_budget_min": 330,
+ "stages": [
+  {
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/pilot.jsonl",
+     "--results",
+     "results/pilot.jsonl",
+     "--prompts",
+     "data/prompts/pilot.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "qwen-3.8-27b",
+     "prompts": "data/prompts/main.jsonl",
+     "output": "results/main_qwen.jsonl"
+    },
+    {
+     "provider": "groq",
+     "model": "openai/gpt-oss-20b",
+     "prompts": "data/prompts/main.jsonl",
+     "output": "results/main_gptoss.jsonl"
+    },
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "prompts": "data/grading/pilot.jsonl",
+     "output": "results/grades_panel_pilot.jsonl"
+    },
+    {
+     "provider": "groq",
+     "model": "openai/gpt-oss-120b",
+     "prompts": "data/grading/pilot.jsonl",
+     "output": "results/grades_panel_pilot.jsonl"
+    },
+    {
+     "provider": "gemini",
+     "model": "gemma-4-31b-it",
+     "prompts": "data/grading/pilot.jsonl",
+     "output": "results/grades_panel_pilot.jsonl",
+     "min_gap": 3
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-2.5-flash",
+     "prompts": "data/grading/pilot.jsonl",
+     "output": "results/grades_panel_pilot.jsonl",
+     "min_gap": 7
+    }
+   ]
+  },
+  {
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/main_all.jsonl",
+     "--results",
+     "results/main_qwen.jsonl",
+     "results/main_gptoss.jsonl",
+     "--prompts",
+     "data/prompts/main.jsonl"
+    ],
+    [
+     "scripts/build_grading.py",
+     "data/grading/main_sample.jsonl",
+     "--results",
+     "results/main_qwen.jsonl",
+     "results/main_gptoss.jsonl",
+     "--prompts",
+     "data/prompts/main.jsonl",
+     "--every",
+     "12"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "prompts": "data/grading/main_all.jsonl",
+     "output": "results/grades_main.jsonl",
+     "shard": [
+      0,
+      2
+     ]
+    },
+    {
+     "provider": "groq",
+     "model": "openai/gpt-oss-120b",
+     "prompts": "data/grading/main_all.jsonl",
+     "output": "results/grades_main.jsonl",
+     "shard": [
+      1,
+      2
+     ]
+    },
+    {
+     "provider": "gemini",
+     "model": "gemma-4-31b-it",
+     "prompts": "data/grading/main_sample.jsonl",
+     "output": "results/grades_panel_main.jsonl",
+     "min_gap": 3
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-2.5-flash",
+     "prompts": "data/grading/main_sample.jsonl",
+     "output": "results/grades_panel_main.jsonl",
+     "min_gap": 7
+    }
+   ]
+  },
+  {
+   "pre": [
+    [
+     "scripts/build_pushback.py",
+     "results/main_qwen.jsonl",
+     "results/grades_main.jsonl",
+     "results/main_gptoss.jsonl",
+     "results/grades_main.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "qwen-3.8-27b",
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl"
+    },
+    {
+     "provider": "groq",
+     "model": "openai/gpt-oss-20b",
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl"
+    }
+   ]
+  },
+  {
+   "pre": [
+    [
+     "scripts/build_grading.py",
+     "data/grading/pushback.jsonl",
+     "--results",
+     "results/pushback.jsonl",
+     "--prompts",
+     "data/prompts/pushback.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "cerebras",
+     "model": "gpt-oss-120b",
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "shard": [
+      0,
+      2
+     ]
+    },
+    {
+     "provider": "groq",
+     "model": "openai/gpt-oss-120b",
+     "prompts": "data/grading/pushback.jsonl",
+     "output": "results/grades_pushback.jsonl",
+     "shard": [
+      1,
+      2
+     ]
+    }
+   ]
+  }
+ ]
+}

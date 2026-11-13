@@ -60,7 +60,7 @@ def list_models(provider):
         return {"error": repr(e)[:300]}
 
 
-def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5):
+def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, min_gap=None):
     """Return (text, meta). Waits to respect rate limits; retries on 429/5xx."""
     p = PROVIDERS[provider]
     key = os.environ[p["key_env"]]
@@ -70,12 +70,14 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5):
         "temperature": temperature,
         "max_tokens": max_tokens,
     }
-    delay = p["min_gap"]
+    mg = p["min_gap"] if min_gap is None else min_gap
+    delay = mg
+    slot = (provider, model)  # rate limits are per model
     for attempt in range(retries):
-        gap = time.time() - _last_call.get(provider, 0)
-        if gap < p["min_gap"]:
-            time.sleep(p["min_gap"] - gap)
-        _last_call[provider] = time.time()
+        gap = time.time() - _last_call.get(slot, 0)
+        if gap < mg:
+            time.sleep(mg - gap)
+        _last_call[slot] = time.time()
         try:
             out = _request(f"{p['base']}/chat/completions", key, body)
             choice = out["choices"][0]
