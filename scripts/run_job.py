@@ -100,8 +100,9 @@ def _run_target(job, t, t0):
     shard = t.get("shard")
     any_done = set()
     if t.get("skip_any"):
+        sm = t.get("skip_models")
         for fp in [out_path] + [live_path(x) for x in t.get("skip_files", [])]:
-            any_done |= {r["prompt_id"] for r in load_jsonl(fp) if r.get("response")}
+            any_done |= {r["prompt_id"] for r in load_jsonl(fp) if r.get("response") and (not sm or r["model"] in sm)}
     n = fails = 0
     for idx, p in enumerate(prompts):
         if shard and zlib.crc32(p["id"].encode()) % shard[1] != shard[0]:
@@ -113,7 +114,7 @@ def _run_target(job, t, t0):
         if time.time() - t0 > budget:
             print("time budget reached, stopping", t, flush=True)
             break
-        if p.get("only_model") and p["only_model"] != t["model"]:
+        if p.get("only_model") and p["only_model"] not in [t["model"]] + t.get("aliases", []):
             continue
         k = (p["id"], t["provider"], t["model"])
         if k in done:

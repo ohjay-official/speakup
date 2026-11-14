@@ -22,7 +22,8 @@ TESTED = {"qwen-3.8-27b": "Qwen3.8-27B", "openai/gpt-oss-20b": "gpt-oss-20b",
           "gemma-4-31b-it": "Gemma 4 31B", "gemini-3.5-flash-lite": "Gemini 3.5 Flash Lite"}
 GRADER_NAME = {"gpt-oss-120b": "gpt-oss-120b", "openai/gpt-oss-120b": "gpt-oss-120b",
                "gemma-4-31b-it": "Gemma 4 31B", "gemini-2.5-flash": "Gemini 2.5 Flash",
-               "gemini-3.1-flash-lite": "Gemini 3.1 Flash Lite"}
+               "gemini-3.1-flash-lite": "Gemini 3.1 Flash Lite",
+               "gemini-3.1-flash-lite-preview": "Gemini 3.1 Flash Lite"}  # same model, separate quota bucket
 out = {}
 md = []
 
@@ -69,8 +70,35 @@ def grades_by_target(path, grader_models=None):
         parts = r["prompt_id"].split("|")
         prov, mod = parts[-2], parts[-1]
         pid = "|".join(parts[1:-2])
-        g[(pid, prov, mod)][GRADER_NAME.get(r["model"], r["model"])] = pg
+        pg["_ts"] = r.get("ts", "")
+        name = GRADER_NAME.get(r["model"], r["model"])
+        old = g[(pid, prov, mod)].get(name)
+        if old is None or pg["_ts"] >= old["_ts"]:
+            g[(pid, prov, mod)][name] = pg
     return g
+
+
+def all_grades(*names):
+    """Merge grade files; keep the newest grade per (reply, grader)."""
+    G = defaultdict(dict)
+    for n in names:
+        for k, v in grades_by_target(f"{R}/{n}").items():
+            for gname, pg in v.items():
+                if gname not in G[k] or pg["_ts"] >= G[k][gname]["_ts"]:
+                    G[k][gname] = pg
+    return G
+
+
+PREF = ("gpt-oss-120b", "Gemini 3.1 Flash Lite")
+
+
+def pick(gg, reply_ts):
+    """A grade made after the reply it grades (older grades belong to an earlier, empty reply)."""
+    for name in PREF:
+        g = gg.get(name)
+        if g is not None and g["_ts"] >= reply_ts:
+            return name, g
+    return None, None
 
 
 def kappa(a, b):
@@ -206,16 +234,12 @@ P = prompts("main")
 main_res = {}
 for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
-G = grades_by_target(f"{R}/grades_main.jsonl")
-for extra in ("grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl"):
-    for k, v in grades_by_target(f"{R}/{extra}").items():
-        G[k] = v if extra.endswith("v2.jsonl") else {**G[k], **v}  # v2 regrades replies that were empty before
+G = all_grades("grades_main.jsonl", "grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl",
+               "grades_main_d2.jsonl")
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])
-    gg = G.get(k, {})
-    gname = "gpt-oss-120b" if "gpt-oss-120b" in gg else "Gemini 3.1 Flash Lite"
-    g = gg.get(gname)
+    gname, g = pick(G.get(k, {}), r.get("ts", ""))
     if not p or g is None:
         continue
     rows.append({"grader": gname, **{x: p.get(x) for x in ("id", "case", "label", "mode", "framing", "system", "case_set")},
@@ -366,12 +390,10 @@ md.append("")
 PP = prompts("pushback", "pushback_l1")
 push = latest(load(f"{R}/pushback.jsonl"))
 push.update(latest(load(f"{R}/pushback_l1.jsonl")))
-GP = grades_by_target(f"{R}/grades_pushback.jsonl")
-for k, v in grades_by_target(f"{R}/grades_pushback_l1.jsonl").items():
-    GP[k].update(v)
+GP = all_grades("grades_pushback.jsonl", "grades_pushback_l1.jsonl", "grades_pushback_d2.jsonl")
 pb = defaultdict(list)
 for k, r in push.items():
-    g = GP.get(k, {}).get("gpt-oss-120b") or GP.get(k, {}).get("Gemini 3.1 Flash Lite")
+    _, g = pick(GP.get(k, {}), r.get("ts", ""))
     p = PP.get(k[0])
     if g is None or not p:
         continue
@@ -425,13 +447,11 @@ md.append("")
 
 # ---------------------------------------------------------------- anchor and generality arms
 PA = prompts("anchor", "general")
-GR = grades_by_target(f"{R}/grades_rest.jsonl")  # anchor + generality arms
-for k, v in grades_by_target(f"{R}/grades_rest_v2.jsonl").items():
-    GR[k] = v
+GR = all_grades("grades_rest.jsonl", "grades_rest_v2.jsonl", "grades_rest_d2.jsonl")  # anchor + generality arms
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])
-    g = GR.get(k, {}).get("gpt-oss-120b") or GR.get(k, {}).get("Gemini 3.1 Flash Lite")
+    _, g = pick(GR.get(k, {}), r.get("ts", ""))
     if not p or g is None:
         continue
     arm[(p["arm"], TESTED.get(k[2], k[2]), p["system"])].append({"label": p["label"], "mode": p["mode"],
