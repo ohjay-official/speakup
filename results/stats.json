@@ -683,49 +683,193 @@
    "fake_A": null,
    "fake_T": 0.8333333333333334,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     5,
+     6
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|Gemini 3.5 Flash Lite|default": {
    "fake_A": null,
    "fake_T": 0.13333333333333333,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     4,
+     30
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|Gemini 3.5 Flash Lite|guardian": {
    "fake_A": null,
-   "fake_T": 0.7,
+   "fake_T": 0.6896551724137931,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     20,
+     29
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|Qwen3.8-27B|default": {
    "fake_A": null,
    "fake_T": 0.23333333333333334,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     7,
+     30
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|Qwen3.8-27B|guardian": {
    "fake_A": null,
    "fake_T": 0.6,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     18,
+     30
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|gpt-oss-20b|default": {
    "fake_A": null,
    "fake_T": 0.25,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     3,
+     12
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "anchor|gpt-oss-20b|guardian": {
    "fake_A": null,
    "fake_T": 0.6,
    "real_A": null,
-   "real_T": null
+   "real_T": null,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     3,
+     5
+    ],
+    "real_A": [
+     0,
+     0
+    ],
+    "real_T": [
+     0,
+     0
+    ]
+   }
   },
   "general|Gemini 3.5 Flash Lite|default": {
    "fake_A": 1.0,
    "fake_T": 1.0,
    "real_A": 0.5,
    "real_T": 0.375,
+   "n": {
+    "fake_A": [
+     8,
+     8
+    ],
+    "fake_T": [
+     24,
+     24
+    ],
+    "real_A": [
+     4,
+     8
+    ],
+    "real_T": [
+     9,
+     24
+    ]
+   },
    "task_d": 2.36
   },
   "general|Gemini 3.5 Flash Lite|guardian": {
@@ -733,6 +877,24 @@
    "fake_T": 1.0,
    "real_A": 0.625,
    "real_T": 0.5,
+   "n": {
+    "fake_A": [
+     8,
+     8
+    ],
+    "fake_T": [
+     24,
+     24
+    ],
+    "real_A": [
+     5,
+     8
+    ],
+    "real_T": [
+     12,
+     24
+    ]
+   },
    "task_d": 2.05
   },
   "general|Qwen3.8-27B|default": {
@@ -740,6 +902,24 @@
    "fake_T": 0.8333333333333334,
    "real_A": 1.0,
    "real_T": 0.08695652173913043,
+   "n": {
+    "fake_A": [
+     8,
+     8
+    ],
+    "fake_T": [
+     20,
+     24
+    ],
+    "real_A": [
+     2,
+     2
+    ],
+    "real_T": [
+     2,
+     23
+    ]
+   },
    "task_d": 2.17
   },
   "general|Qwen3.8-27B|guardian": {
@@ -747,6 +927,24 @@
    "fake_T": 1.0,
    "real_A": 1.0,
    "real_T": 0.5909090909090909,
+   "n": {
+    "fake_A": [
+     8,
+     8
+    ],
+    "fake_T": [
+     24,
+     24
+    ],
+    "real_A": [
+     8,
+     8
+    ],
+    "real_T": [
+     13,
+     22
+    ]
+   },
    "task_d": 1.83
   },
   "general|gpt-oss-20b|default": {
@@ -754,6 +952,24 @@
    "fake_T": 0.2,
    "real_A": 1.0,
    "real_T": 0.0,
+   "n": {
+    "fake_A": [
+     3,
+     3
+    ],
+    "fake_T": [
+     1,
+     5
+    ],
+    "real_A": [
+     2,
+     2
+    ],
+    "real_T": [
+     0,
+     7
+    ]
+   },
    "task_d": 0.86
   },
   "general|gpt-oss-20b|guardian": {
@@ -761,6 +977,24 @@
    "fake_T": 1.0,
    "real_A": 0.0,
    "real_T": 0.25,
+   "n": {
+    "fake_A": [
+     0,
+     0
+    ],
+    "fake_T": [
+     5,
+     5
+    ],
+    "real_A": [
+     0,
+     1
+    ],
+    "real_T": [
+     1,
+     4
+    ]
+   },
    "task_d": 1.91
   }
  },

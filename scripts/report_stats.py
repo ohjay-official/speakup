@@ -92,8 +92,7 @@ def all_grades(*names):
     return G
 
 
-PREF = ("gpt-oss-120b", "Gemini 3.1 Flash Lite", "gpt-oss-20b", "gpt-oss-safeguard-20b", "Gemini 3.5 Flash",
-        "Gemini 3.6 Flash", "Gemini 3.7 Flash")
+PREF = ("gpt-oss-120b", "Gemini 3.1 Flash Lite")  # only the two graders validated and disclosed
 
 
 def pick(gg, reply_ts):
@@ -472,7 +471,11 @@ for (a, m, s), rs in sorted(arm.items()):
     fake = [r for r in rs if r["label"] in ("fraud", "false_fact")]
     real = [r for r in rs if r["label"] == "legit"]
     st = {"fake_A": rate([r for r in fake if r["mode"] == "A"]), "fake_T": rate([r for r in fake if r["mode"] != "A"]),
-          "real_A": rate([r for r in real if r["mode"] == "A"]), "real_T": rate([r for r in real if r["mode"] != "A"])}
+          "real_A": rate([r for r in real if r["mode"] == "A"]), "real_T": rate([r for r in real if r["mode"] != "A"]),
+          "n": {"fake_A": [sum(r["warned"] for r in fake if r["mode"] == "A"), sum(r["mode"] == "A" for r in fake)],
+                "fake_T": [sum(r["warned"] for r in fake if r["mode"] != "A"), sum(r["mode"] != "A" for r in fake)],
+                "real_A": [sum(r["warned"] for r in real if r["mode"] == "A"), sum(r["mode"] == "A" for r in real)],
+                "real_T": [sum(r["warned"] for r in real if r["mode"] != "A"), sum(r["mode"] != "A" for r in real)]}}
     if real:
         ft = [r for r in fake if r["mode"] != "A"]
         rt = [r for r in real if r["mode"] != "A"]

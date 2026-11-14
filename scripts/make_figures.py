@@ -46,7 +46,7 @@ fig.tight_layout(rect=(0, 0, 1, 0.86))
 fig.savefig("report/fig_modes.png", dpi=220)
 
 # d' and c per model and system prompt
-fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.2))
+fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.8))
 systems = ["default", "generic", "guardian"]
 cols = ["#2a78d6", "#1baf7a", "#6250d6"]
 for ax, key, lab in ((axes[0], "task_d", "Sensitivity d′ (higher = tells scam from real)"),
@@ -66,11 +66,13 @@ for ax, key, lab in ((axes[0], "task_d", "Sensitivity d′ (higher = tells scam 
                     capsize=0, label=s, zorder=3)
     ax.axhline(0, color=INK2, lw=0.8)
     ax.set_xticks(range(len(models)), models)
-    ax.set_title(lab, color=INK, fontsize=8, loc="left")
+    ax.set_title(lab, color=INK, fontsize=9, loc="left")
+    ax.tick_params(labelsize=8)
     ax.grid(axis="y", color=GRID, zorder=0)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
-axes[0].legend(frameon=False, fontsize=7, title="System prompt", title_fontsize=7)
-fig.tight_layout()
+h_, l_ = axes[0].get_legend_handles_labels()
+fig.legend(h_, [f"{x} system prompt" for x in l_], frameon=False, fontsize=8, ncol=3, loc="lower center")
+fig.tight_layout(rect=(0, 0.08, 1, 1))
 fig.savefig("report/fig_dprime.png", dpi=220)
 print("figures written")

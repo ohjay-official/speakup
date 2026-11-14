@@ -3,7 +3,9 @@ from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
-d=Document('ref.docx')
+import sys
+REFP=sys.argv[1] if len(sys.argv)>1 else 'ref.docx'
+d=Document(REFP)
 S={s.name:s for s in d.styles}
 def setf(name,size=None,bold=None,italic=None,align=None,before=None,after=None):
     s=S[name]; f=s.font; f.color.rgb=RGBColor(0,0,0)
@@ -30,4 +32,4 @@ setf('Image Caption',9.5,False,True,after=8); setf('Table Caption',9.5,False,Tru
 for n in ('Heading 1','Heading 2','Heading 3','Abstract Title'): S[n].paragraph_format.keep_with_next=True
 sec=d.sections[0]; sec.page_width=Cm(21.59); sec.page_height=Cm(27.94)
 for m in ('left_margin','right_margin','top_margin','bottom_margin'): setattr(sec,m,Cm(2.54))
-d.save('ref.docx'); print('ok')
+d.save(REFP); print('ok')

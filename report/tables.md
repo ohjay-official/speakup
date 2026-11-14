@@ -68,7 +68,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 |---|---|---|---|---|---|---|---|
 | anchor | Gemini 3 Flash | default | n/a | 83% | n/a | n/a | n/a |
 | anchor | Gemini 3.5 Flash Lite | default | n/a | 13% | n/a | n/a | n/a |
-| anchor | Gemini 3.5 Flash Lite | guardian | n/a | 70% | n/a | n/a | n/a |
+| anchor | Gemini 3.5 Flash Lite | guardian | n/a | 69% | n/a | n/a | n/a |
 | anchor | Qwen3.8-27B | default | n/a | 23% | n/a | n/a | n/a |
 | anchor | Qwen3.8-27B | guardian | n/a | 60% | n/a | n/a | n/a |
 | anchor | gpt-oss-20b | default | n/a | 25% | n/a | n/a | n/a |
