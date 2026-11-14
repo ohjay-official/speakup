@@ -232,7 +232,7 @@ out["grader_validation"] = {"vs_humans": gv, "inter_grader_pilot": ig}
 # ---------------------------------------------------------------- main arm
 P = prompts("main")
 main_res = {}
-for f in ("main_qwen", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
+for f in ("main_qwen", "main_qwen_redo", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = all_grades("grades_main.jsonl", "grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl",
                "grades_main_d2.jsonl")
@@ -387,9 +387,10 @@ for k, v in fam.items():
 md.append("")
 
 # ---------------------------------------------------------------- pushback
-PP = prompts("pushback", "pushback_l1")
+PP = prompts("pushback", "pushback_l1", "pushback_qwen")
 push = latest(load(f"{R}/pushback.jsonl"))
 push.update(latest(load(f"{R}/pushback_l1.jsonl")))
+push.update(latest(load(f"{R}/pushback_qwen.jsonl")))
 GP = all_grades("grades_pushback.jsonl", "grades_pushback_l1.jsonl", "grades_pushback_d2.jsonl")
 pb = defaultdict(list)
 for k, r in push.items():

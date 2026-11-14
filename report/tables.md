@@ -23,19 +23,19 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | System | Fraud advice | Fraud task | Legit advice | Legit task | task d' [95% CI] | task c [95% CI] |
 |---|---|---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | default | 100% | 97% | n/a | n/a | n/a  | n/a  |
+| Gemini 3.5 Flash Lite | default | 100% | 98% | n/a | n/a | n/a  | n/a  |
 | Gemini 3.5 Flash Lite | generic | 100% | 100% | n/a | n/a | n/a  | n/a  |
 | Gemini 3.5 Flash Lite | guardian | 100% | 100% | n/a | n/a | n/a  | n/a  |
-| Qwen3.8-27B | default | 100% | 65% | n/a | 7% | 1.73 [1.03, 2.72] | 0.48 [0.12, 0.98] |
-| Qwen3.8-27B | generic | 100% | 99% | 100% | 43% | 2.3 [1.58, 3.17] | -0.97 [-1.4, -0.62] |
-| Qwen3.8-27B | guardian | 100% | 100% | 80% | 58% | 2.33 [1.59, 3.06] | -1.37 [-1.77, -1.01] |
+| Qwen3.8-27B | default | 100% | 67% | n/a | 5% | 2.03 [1.35, 2.97] | 0.57 [0.22, 1.04] |
+| Qwen3.8-27B | generic | 100% | 99% | 100% | 43% | 2.34 [1.66, 3.18] | -1.0 [-1.4, -0.66] |
+| Qwen3.8-27B | guardian | 100% | 100% | 88% | 59% | 2.36 [1.63, 3.0] | -1.39 [-1.76, -1.1] |
 
 ### Fraud warning rate by mode (default system prompt)
 
 | Model | A advice | T1 table | T2 invite | T3 borrow | McNemar A vs task (p) |
 |---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | 100% | 100% | 100% | 93% | 0 vs 0 (p=1) |
-| Qwen3.8-27B | 100% | 89% | 58% | 61% | 23 vs 0 (p=2.4e-07) |
+| Gemini 3.5 Flash Lite | 100% | 100% | 100% | 94% | 0 vs 0 (p=1) |
+| Qwen3.8-27B | 100% | 92% | 58% | 61% | 25 vs 0 (p=6e-08) |
 
 ## AI grader panel on a 1-in-12 sample of main-arm replies
 
@@ -61,6 +61,13 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Arm | Model | System | fake advice | fake task | real advice | real task | task d' |
 |---|---|---|---|---|---|---|---|
-| anchor | Qwen3.8-27B | default | n/a | 25% | n/a | n/a | n/a |
-| anchor | Qwen3.8-27B | guardian | n/a | 61% | n/a | n/a | n/a |
+| anchor | Gemini 3 Flash | default | n/a | 100% | n/a | n/a | n/a |
+| anchor | Qwen3.8-27B | default | n/a | 23% | n/a | n/a | n/a |
+| anchor | Qwen3.8-27B | guardian | n/a | 59% | n/a | n/a | n/a |
+| anchor | gpt-oss-20b | default | n/a | 11% | n/a | n/a | n/a |
+| anchor | gpt-oss-20b | guardian | n/a | 60% | n/a | n/a | n/a |
+| general | Qwen3.8-27B | default | 100% | 73% | 100% | 0% | 2.47 |
+| general | Qwen3.8-27B | guardian | 100% | 100% | 100% | 53% | 1.88 |
+| general | gpt-oss-20b | default | 100% | 50% | 100% | 0% | 0.97 |
+| general | gpt-oss-20b | guardian | n/a | 100% | 0% | 0% | 1.96 |
 

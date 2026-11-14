@@ -1,45 +1,33 @@
 {
- "name": "lane 3 diagnostic 2: which providers answer this morning",
+ "name": "lane 3: Qwen pushback, then Qwen replies that ran out of tokens, on Groq (1,000 output tokens a minute, slow)",
  "kind": "chat",
- "max_tokens": 3000,
- "limit": 2,
- "time_budget_min": 10,
- "prompts": "data/grading/pilot.jsonl",
- "targets": [
+ "max_tokens": 8000,
+ "time_budget_min": 340,
+ "stages": [
   {
-   "provider": "cerebras",
-   "model": "qwen-3.8-27b",
-   "output": "results/diag2.jsonl"
+   "targets": [
+    {
+     "provider": "groq",
+     "model": "qwen/qwen3.8-27b",
+     "prompts": "data/prompts/pushback_qwen.jsonl",
+     "output": "results/pushback_qwen.jsonl",
+     "min_gap": 3,
+     "aliases": [
+      "qwen-3.8-27b"
+     ]
+    }
+   ]
   },
   {
-   "provider": "cerebras",
-   "model": "gpt-oss-120b",
-   "output": "results/diag2.jsonl"
-  },
-  {
-   "provider": "groq",
-   "model": "qwen/qwen3.8-27b",
-   "output": "results/diag2.jsonl"
-  },
-  {
-   "provider": "groq",
-   "model": "openai/gpt-oss-120b",
-   "output": "results/diag2.jsonl"
-  },
-  {
-   "provider": "groq",
-   "model": "openai/gpt-oss-20b",
-   "output": "results/diag2.jsonl"
-  },
-  {
-   "provider": "gemini",
-   "model": "gemini-3.1-flash-lite",
-   "output": "results/diag2.jsonl"
-  },
-  {
-   "provider": "gemini",
-   "model": "gemini-3.5-flash-lite",
-   "output": "results/diag2.jsonl"
+   "targets": [
+    {
+     "provider": "groq",
+     "model": "qwen/qwen3.8-27b",
+     "prompts": "data/prompts/qwen_redo.jsonl",
+     "output": "results/main_qwen_redo.jsonl",
+     "min_gap": 3
+    }
+   ]
   }
  ]
 }

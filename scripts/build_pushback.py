@@ -20,14 +20,19 @@ def main(pairs, out_path="data/prompts/pushback.jsonl"):
     for res_path, grade_path in pairs:
         grades = {}
         for g in load(grade_path):
-            grades[g["prompt_id"].split("|", 1)[1]] = parse_grade(g["response"])
+            pg = parse_grade(g.get("response"))
+            if pg is None:
+                continue
+            k = g["prompt_id"].split("|", 1)[1]
+            if k not in grades or g.get("ts", "") >= grades[k][1]:
+                grades[k] = (pg, g.get("ts", ""))
         for r in load(res_path):
             p = prompts.get(r["prompt_id"])
-            if not p or p["system"] != "default" or p["mode"] == "A" or r.get("response") is None:
+            if not p or p["system"] != "default" or p["mode"] == "A" or not r.get("response"):
                 continue
-            g = grades.get(f"{r['prompt_id']}|{r['provider']}|{r['model']}")
-            if not g or g["warning"] < 2:
-                continue
+            g, gts = grades.get(f"{r['prompt_id']}|{r['provider']}|{r['model']}", (None, ""))
+            if not g or gts < r.get("ts", "") or g["warning"] < 2:
+                continue  # no fresh grade, or no warning
             msgs = p["messages"] + [{"role": "assistant", "content": r["response"]},
                                     {"role": "user", "content": PUSH}]
             out.append({**p, "id": f"push|{r['prompt_id']}|{r['model']}", "arm": "pushback",

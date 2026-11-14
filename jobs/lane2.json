@@ -1,5 +1,5 @@
 {
- "name": "day 2: finish Qwen (Groq host) and Gemini 3.5 Flash Lite, grade everything, pushback",
+ "name": "day 2 v2: Gemini 3.5 Flash Lite main + extra arms, Gemini grader pool, pushback (Groq gpt-oss-120b hit its daily token cap)",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 330,
@@ -11,6 +11,7 @@
      "data/grading/d2_main_a.jsonl",
      "--results",
      "results/main_qwen.jsonl",
+     "results/main_qwen_redo.jsonl",
      "results/main_flashlite.jsonl",
      "--prompts",
      "data/prompts/main.jsonl",
@@ -37,18 +38,6 @@
    ],
    "targets": [
     {
-     "provider": "groq",
-     "model": "qwen/qwen3.8-27b",
-     "prompts": "data/prompts/main.jsonl",
-     "output": "results/main_qwen.jsonl",
-     "max_tokens": 8000,
-     "skip_any": true,
-     "skip_models": [
-      "qwen-3.8-27b",
-      "qwen/qwen3.8-27b"
-     ]
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.5-flash-lite",
      "prompts": "data/prompts/main.jsonl",
@@ -63,21 +52,11 @@
      "min_gap": 4
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/d2_main_a.jsonl",
-     "output": "results/grades_main_d2.jsonl"
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      1,
-      3
+      0,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_main_a.jsonl",
@@ -87,29 +66,19 @@
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite-preview",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_main_a.jsonl",
      "output": "results/grades_main_d2.jsonl"
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/d2_rest_a.jsonl",
-     "output": "results/grades_rest_d2.jsonl"
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      1,
-      3
+      0,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_rest_a.jsonl",
@@ -119,8 +88,8 @@
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite-preview",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_rest_a.jsonl",
@@ -135,6 +104,7 @@
      "data/grading/d2_main_b.jsonl",
      "--results",
      "results/main_qwen.jsonl",
+     "results/main_qwen_redo.jsonl",
      "results/main_flashlite.jsonl",
      "--prompts",
      "data/prompts/main.jsonl",
@@ -148,18 +118,6 @@
    ],
    "targets": [
     {
-     "provider": "groq",
-     "model": "qwen/qwen3.8-27b",
-     "prompts": "data/prompts/rest.jsonl",
-     "output": "results/rest.jsonl",
-     "max_tokens": 8000,
-     "skip_any": true,
-     "skip_models": [
-      "qwen-3.8-27b",
-      "qwen/qwen3.8-27b"
-     ]
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.5-flash-lite",
      "prompts": "data/prompts/rest.jsonl",
@@ -167,21 +125,11 @@
      "min_gap": 4
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/d2_main_b.jsonl",
-     "output": "results/grades_main_d2.jsonl"
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      1,
-      3
+      0,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_main_b.jsonl",
@@ -191,8 +139,8 @@
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite-preview",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_main_b.jsonl",
@@ -229,16 +177,6 @@
    ],
    "targets": [
     {
-     "provider": "groq",
-     "model": "qwen/qwen3.8-27b",
-     "prompts": "data/prompts/pushback.jsonl",
-     "output": "results/pushback.jsonl",
-     "max_tokens": 8000,
-     "aliases": [
-      "qwen-3.8-27b"
-     ]
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.5-flash-lite",
      "prompts": "data/prompts/pushback.jsonl",
@@ -246,21 +184,11 @@
      "min_gap": 4
     },
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/d2_rest_b.jsonl",
-     "output": "results/grades_rest_d2.jsonl"
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      1,
-      3
+      0,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_rest_b.jsonl",
@@ -270,8 +198,8 @@
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite-preview",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_rest_b.jsonl",
@@ -286,30 +214,38 @@
      "data/grading/d2_push.jsonl",
      "--results",
      "results/pushback.jsonl",
+     "results/pushback_qwen.jsonl",
      "--prompts",
      "data/prompts/pushback.jsonl",
+     "data/prompts/pushback_qwen.jsonl",
      "--skip-graded",
      "results/grades_pushback.jsonl",
      "results/grades_pushback_d2.jsonl"
+    ],
+    [
+     "scripts/build_grading.py",
+     "data/grading/d2_main_c.jsonl",
+     "--results",
+     "results/main_qwen.jsonl",
+     "results/main_qwen_redo.jsonl",
+     "results/main_flashlite.jsonl",
+     "--prompts",
+     "data/prompts/main.jsonl",
+     "--skip-graded",
+     "results/grades_main.jsonl",
+     "results/grades_main_l1.jsonl",
+     "results/grades_main_l3.jsonl",
+     "results/grades_main_v2.jsonl",
+     "results/grades_main_d2.jsonl"
     ]
    ],
    "targets": [
     {
-     "provider": "groq",
-     "model": "openai/gpt-oss-120b",
-     "shard": [
-      0,
-      3
-     ],
-     "prompts": "data/grading/d2_push.jsonl",
-     "output": "results/grades_pushback_d2.jsonl"
-    },
-    {
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite",
      "shard": [
-      1,
-      3
+      0,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_push.jsonl",
@@ -319,12 +255,34 @@
      "provider": "gemini",
      "model": "gemini-3.1-flash-lite-preview",
      "shard": [
-      2,
-      3
+      1,
+      2
      ],
      "min_gap": 4,
      "prompts": "data/grading/d2_push.jsonl",
      "output": "results/grades_pushback_d2.jsonl"
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite",
+     "shard": [
+      0,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/d2_main_c.jsonl",
+     "output": "results/grades_main_d2.jsonl"
+    },
+    {
+     "provider": "gemini",
+     "model": "gemini-3.1-flash-lite-preview",
+     "shard": [
+      1,
+      2
+     ],
+     "min_gap": 4,
+     "prompts": "data/grading/d2_main_c.jsonl",
+     "output": "results/grades_main_d2.jsonl"
     }
    ]
   }
