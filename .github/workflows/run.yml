@@ -32,7 +32,7 @@ jobs:
           git config user.email "speakup-bot@users.noreply.github.com"
           git pull -q --rebase origin main || true
           export LIVE_DIR=/tmp/live
-          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 1)" && (git pull -q --rebase --autostash && git push -q) || true; done ) &
+          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 1)" && (for i in 1 2 3; do git pull -q --rebase --autostash && git push -q && break; sleep $((RANDOM % 20 + 5)); done) || true; done ) &
           python scripts/run_job.py jobs/current.json
       - name: Commit results
         if: always()

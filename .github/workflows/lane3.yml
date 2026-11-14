@@ -31,7 +31,7 @@ jobs:
           git config user.name "speakup-bot"
           git config user.email "speakup-bot@users.noreply.github.com"
           export LIVE_DIR=/tmp/live
-          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 3)" && (git pull -q --rebase --autostash && git push -q) || true; done ) &
+          ( while true; do sleep 600; python scripts/run_job.py --sync; git add results && git commit -qm "Partial results (lane 3)" && (for i in 1 2 3; do git pull -q --rebase --autostash && git push -q && break; sleep $((RANDOM % 20 + 5)); done) || true; done ) &
           python scripts/run_job.py jobs/lane3.json
       - name: Commit results
         if: always()
