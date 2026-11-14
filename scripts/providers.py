@@ -20,6 +20,11 @@ PROVIDERS = {
         "key_env": "GROQ_API_KEY",
         "min_gap": 2.5,  # about 24 a minute, under the 30 cap
     },
+    "nebius": {
+        "base": "https://api.tokenfactory.nebius.com/v1",
+        "key_env": "NEBIUS_API_KEY",
+        "min_gap": 0.5,  # paid credits; generous limits
+    },
     "cerebras": {
         "base": "https://api.cerebras.ai/v1",
         "key_env": "CEREBRAS_API_KEY",
