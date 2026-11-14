@@ -80,3 +80,29 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | general | gpt-oss-20b | default | 100% | 20% | 100% | 0% | 0.86 |
 | general | gpt-oss-20b | guardian | n/a | 100% | 0% | 25% | 1.91 |
 
+## Robustness checks (default system prompt unless noted)
+
+### Gemini 3.5 Flash Lite
+
+- advice: H 100%, F 82%, d' 1.37, c -1.54 (n 38/22); task: H 96%, F 26%, d' 2.4, c -0.56
+- threshold >= 1: fraud advice 100%, fraud task 96%, legit advice 86%, legit task 35%
+- threshold >= 2: fraud advice 100%, fraud task 96%, legit advice 82%, legit task 26%
+- threshold >= 3: fraud advice 100%, fraud task 94%, legit advice 18%, legit task 6%
+- McNemar, one pair per case x framing (advice warned vs all 3 task replies warned): {'advice_only': 4, 'task_only': 0, 'p': np.float64(0.125), 'pairs': 38}
+- McNemar by request type: {'T1': {'advice_only': 0, 'task_only': 0, 'p': 1.0, 'pairs': 38}, 'T2': {'advice_only': 3, 'task_only': 0, 'p': np.float64(0.25), 'pairs': 38}, 'T3': {'advice_only': 1, 'task_only': 0, 'p': np.float64(1.0), 'pairs': 38}}
+- suppression 0.04, 95% CI clustered by scheme [0.01, 0.07]; task d' CI by scheme [1.77, 3.39]
+- framing McNemar (sceptic-only vs enthusiast-only warned): {'scep_only': 4, 'enth_only': 0, 'p': np.float64(0.125), 'pairs': 57}
+- task d' fix minus default, CI by scheme: {'generic': {'diff': -0.0, 'ci': [-0.92, 0.5]}, 'guardian': {'diff': 0.65, 'ci': [-0.26, 1.21]}}
+
+### Qwen3.8-27B
+
+- advice: H 100%, F 100%, d' 0.29, c -2.08 (n 38/18); task: H 71%, F 23%, d' 1.28, c 0.1
+- threshold >= 1: fraud advice 100%, fraud task 91%, legit advice 100%, legit task 37%
+- threshold >= 2: fraud advice 100%, fraud task 71%, legit advice 100%, legit task 23%
+- threshold >= 3: fraud advice 100%, fraud task 46%, legit advice 56%, legit task 16%
+- McNemar, one pair per case x framing (advice warned vs all 3 task replies warned): {'advice_only': 21, 'task_only': 0, 'p': np.float64(9.5367431640625e-07), 'pairs': 38}
+- McNemar by request type: {'T1': {'advice_only': 2, 'task_only': 0, 'p': np.float64(0.5), 'pairs': 37}, 'T2': {'advice_only': 16, 'task_only': 0, 'p': np.float64(3.0517578125e-05), 'pairs': 38}, 'T3': {'advice_only': 15, 'task_only': 0, 'p': np.float64(6.103515625e-05), 'pairs': 38}}
+- suppression 0.29, 95% CI clustered by scheme [0.18, 0.4]; task d' CI by scheme [0.79, 1.84]
+- framing McNemar (sceptic-only vs enthusiast-only warned): {'scep_only': 19, 'enth_only': 2, 'p': np.float64(0.00022125244140625), 'pairs': 56}
+- task d' fix minus default, CI by scheme: {'generic': {'diff': 0.72, 'ci': [0.02, 1.51]}, 'guardian': {'diff': 1.19, 'ci': [0.36, 1.9]}}
+

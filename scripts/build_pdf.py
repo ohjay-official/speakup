@@ -17,15 +17,24 @@ from reportlab.platypus import (Image, KeepTogether, ListFlowable, ListItem, Par
 src = sys.argv[1] if len(sys.argv) > 1 else "report/paper_final.md"
 dst = sys.argv[2] if len(sys.argv) > 2 else "report/SpeakUp.pdf"
 
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.fonts import addMapping
+_L = "/usr/share/fonts/truetype/liberation/LiberationSerif-"
+for _n, _f in (("Serif", "Regular"), ("Serif-Bold", "Bold"), ("Serif-Italic", "Italic"), ("Serif-BoldItalic", "BoldItalic")):
+    pdfmetrics.registerFont(TTFont(_n, _L + _f + ".ttf"))
+addMapping("Serif", 0, 0, "Serif"); addMapping("Serif", 1, 0, "Serif-Bold")
+addMapping("Serif", 0, 1, "Serif-Italic"); addMapping("Serif", 1, 1, "Serif-BoldItalic")
+
 ss = getSampleStyleSheet()
-body = ParagraphStyle("b", parent=ss["Normal"], fontName="Times-Roman", fontSize=10, leading=13,
+body = ParagraphStyle("b", parent=ss["Normal"], fontName="Serif", fontSize=10, leading=13,
                       alignment=TA_JUSTIFY, spaceAfter=5)
 small = ParagraphStyle("s", parent=body, fontSize=8, leading=10, alignment=0, spaceAfter=0)
 cap = ParagraphStyle("c", parent=body, fontSize=8.5, leading=10.5, textColor=colors.HexColor("#52514e"))
-h1 = ParagraphStyle("h1", parent=body, fontName="Times-Bold", fontSize=16, leading=19, alignment=1, spaceAfter=6)
-h2 = ParagraphStyle("h2", parent=body, fontName="Times-Bold", fontSize=12, leading=15, spaceBefore=8, spaceAfter=4,
+h1 = ParagraphStyle("h1", parent=body, fontName="Serif-Bold", fontSize=16, leading=19, alignment=1, spaceAfter=6)
+h2 = ParagraphStyle("h2", parent=body, keepWithNext=1, fontName="Serif-Bold", fontSize=12, leading=15, spaceBefore=8, spaceAfter=4,
                     alignment=0)
-h3 = ParagraphStyle("h3", parent=body, fontName="Times-Bold", fontSize=10.5, leading=13, spaceBefore=4, alignment=0)
+h3 = ParagraphStyle("h3", parent=body, keepWithNext=1, fontName="Serif-Bold", fontSize=10.5, leading=13, spaceBefore=4, alignment=0)
 author = ParagraphStyle("a", parent=body, alignment=1, fontSize=10)
 
 
@@ -41,7 +50,12 @@ def table(lines):
     rows = [[c.strip() for c in l.strip().strip("|").split("|")] for l in lines]
     rows = [r for r in rows if not all(re.fullmatch(r":?-{2,}:?", c) for c in r)]
     data = [[Paragraph(("<b>%s</b>" if i == 0 else "%s") % inline(c), small) for c in r] for i, r in enumerate(rows)]
-    t = Table(data, repeatRows=1, hAlign="LEFT")
+    # widths in proportion to each column's longest cell (square root, so long text columns get more but not all)
+    ncol = max(len(r) for r in rows)
+    avail = A4[0] - 4 * cm
+    wts = [max(18, max(len(r[j]) if j < len(r) else 0 for r in rows)) ** 0.6 for j in range(ncol)]
+    widths = [avail * w / sum(wts) for w in wts]
+    t = Table(data, repeatRows=1, hAlign="LEFT", colWidths=widths)
     t.setStyle(TableStyle([("LINEABOVE", (0, 0), (-1, 0), 0.8, colors.black),
                            ("LINEBELOW", (0, 0), (-1, 0), 0.5, colors.black),
                            ("LINEBELOW", (0, -1), (-1, -1), 0.8, colors.black),
@@ -117,7 +131,7 @@ flush()
 
 def foot(c, d):
     c.saveState()
-    c.setFont("Times-Roman", 8)
+    c.setFont("Serif", 8)
     c.drawCentredString(A4[0] / 2, 1.2 * cm, str(d.page))
     c.restoreState()
 

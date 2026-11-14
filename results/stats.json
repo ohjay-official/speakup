@@ -194,6 +194,20 @@
     "pre": 0.9583333333333334,
     "holdout": 0.9444444444444444
    },
+   "by_set_fraud_T_n": {
+    "named": [
+     47,
+     48
+    ],
+    "pre": [
+     46,
+     48
+    ],
+    "holdout": [
+     17,
+     18
+    ]
+   },
    "by_set_fraud_A": {
     "named": 1.0,
     "pre": 1.0,
@@ -252,6 +266,20 @@
     "named": 1.0,
     "pre": 1.0,
     "holdout": 1.0
+   },
+   "by_set_fraud_T_n": {
+    "named": [
+     48,
+     48
+    ],
+    "pre": [
+     48,
+     48
+    ],
+    "holdout": [
+     18,
+     18
+    ]
    },
    "by_set_fraud_A": {
     "named": 1.0,
@@ -312,6 +340,20 @@
     "pre": 1.0,
     "holdout": 1.0
    },
+   "by_set_fraud_T_n": {
+    "named": [
+     48,
+     48
+    ],
+    "pre": [
+     48,
+     48
+    ],
+    "holdout": [
+     18,
+     18
+    ]
+   },
    "by_set_fraud_A": {
     "named": 1.0,
     "pre": 1.0,
@@ -370,6 +412,20 @@
     "named": 0.7291666666666666,
     "pre": 0.7083333333333334,
     "holdout": 0.6470588235294118
+   },
+   "by_set_fraud_T_n": {
+    "named": [
+     35,
+     48
+    ],
+    "pre": [
+     34,
+     48
+    ],
+    "holdout": [
+     11,
+     17
+    ]
    },
    "by_set_fraud_A": {
     "named": 1.0,
@@ -430,6 +486,20 @@
     "pre": 1.0,
     "holdout": 0.9411764705882353
    },
+   "by_set_fraud_T_n": {
+    "named": [
+     48,
+     48
+    ],
+    "pre": [
+     48,
+     48
+    ],
+    "holdout": [
+     16,
+     17
+    ]
+   },
    "by_set_fraud_A": {
     "named": 1.0,
     "pre": 1.0,
@@ -488,6 +558,20 @@
     "named": 1.0,
     "pre": 1.0,
     "holdout": 1.0
+   },
+   "by_set_fraud_T_n": {
+    "named": [
+     48,
+     48
+    ],
+    "pre": [
+     48,
+     48
+    ],
+    "holdout": [
+     18,
+     18
+    ]
    },
    "by_set_fraud_A": {
     "named": 1.0,
@@ -678,6 +762,198 @@
    "real_A": 0.0,
    "real_T": 0.25,
    "task_d": 1.91
+  }
+ },
+ "robustness": {
+  "Gemini 3.5 Flash Lite": {
+   "advice": {
+    "H": 1.0,
+    "F": 0.8181818181818182,
+    "d": 1.37,
+    "c": -1.54,
+    "n_fraud": 38,
+    "n_legit": 22
+   },
+   "task": {
+    "H": 0.9649122807017544,
+    "F": 0.25757575757575757,
+    "d": 2.4,
+    "c": -0.56,
+    "n_fraud": 114,
+    "n_legit": 66
+   },
+   "threshold": {
+    "1": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.9649122807017544,
+     "legit_A": 0.8636363636363636,
+     "legit_T": 0.3484848484848485
+    },
+    "2": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.9649122807017544,
+     "legit_A": 0.8181818181818182,
+     "legit_T": 0.25757575757575757
+    },
+    "3": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.9385964912280702,
+     "legit_A": 0.18181818181818182,
+     "legit_T": 0.06060606060606061
+    }
+   },
+   "mcnemar_one_pair": {
+    "advice_only": 4,
+    "task_only": 0,
+    "p": 0.125,
+    "pairs": 38
+   },
+   "mcnemar_by_type": {
+    "T1": {
+     "advice_only": 0,
+     "task_only": 0,
+     "p": 1.0,
+     "pairs": 38
+    },
+    "T2": {
+     "advice_only": 3,
+     "task_only": 0,
+     "p": 0.25,
+     "pairs": 38
+    },
+    "T3": {
+     "advice_only": 1,
+     "task_only": 0,
+     "p": 1.0,
+     "pairs": 38
+    }
+   },
+   "supp": 0.03508771929824561,
+   "supp_ci_scheme": [
+    0.01,
+    0.07
+   ],
+   "task_d_ci_scheme": [
+    1.77,
+    3.39
+   ],
+   "framing_mcnemar": {
+    "scep_only": 4,
+    "enth_only": 0,
+    "p": 0.125,
+    "pairs": 57
+   },
+   "fix_d_diff": {
+    "generic": {
+     "diff": -0.0,
+     "ci": [
+      -0.92,
+      0.5
+     ]
+    },
+    "guardian": {
+     "diff": 0.65,
+     "ci": [
+      -0.26,
+      1.21
+     ]
+    }
+   }
+  },
+  "Qwen3.8-27B": {
+   "advice": {
+    "H": 1.0,
+    "F": 1.0,
+    "d": 0.29,
+    "c": -2.08,
+    "n_fraud": 38,
+    "n_legit": 18
+   },
+   "task": {
+    "H": 0.7079646017699115,
+    "F": 0.22580645161290322,
+    "d": 1.28,
+    "c": 0.1,
+    "n_fraud": 113,
+    "n_legit": 62
+   },
+   "threshold": {
+    "1": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.911504424778761,
+     "legit_A": 1.0,
+     "legit_T": 0.3709677419354839
+    },
+    "2": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.7079646017699115,
+     "legit_A": 1.0,
+     "legit_T": 0.22580645161290322
+    },
+    "3": {
+     "fraud_A": 1.0,
+     "fraud_T": 0.46017699115044247,
+     "legit_A": 0.5555555555555556,
+     "legit_T": 0.16129032258064516
+    }
+   },
+   "mcnemar_one_pair": {
+    "advice_only": 21,
+    "task_only": 0,
+    "p": 9.5367431640625e-07,
+    "pairs": 38
+   },
+   "mcnemar_by_type": {
+    "T1": {
+     "advice_only": 2,
+     "task_only": 0,
+     "p": 0.5,
+     "pairs": 37
+    },
+    "T2": {
+     "advice_only": 16,
+     "task_only": 0,
+     "p": 3.0517578125e-05,
+     "pairs": 38
+    },
+    "T3": {
+     "advice_only": 15,
+     "task_only": 0,
+     "p": 6.103515625e-05,
+     "pairs": 38
+    }
+   },
+   "supp": 0.2920353982300885,
+   "supp_ci_scheme": [
+    0.18,
+    0.4
+   ],
+   "task_d_ci_scheme": [
+    0.79,
+    1.84
+   ],
+   "framing_mcnemar": {
+    "scep_only": 19,
+    "enth_only": 2,
+    "p": 0.00022125244140625,
+    "pairs": 56
+   },
+   "fix_d_diff": {
+    "generic": {
+     "diff": 0.72,
+     "ci": [
+      0.02,
+      1.51
+     ]
+    },
+    "guardian": {
+     "diff": 1.19,
+     "ci": [
+      0.36,
+      1.9
+     ]
+    }
+   }
   }
  }
 }

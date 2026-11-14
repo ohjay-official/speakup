@@ -325,6 +325,7 @@ for m in models:
         st["T2_claims_and_warned"] = rate([r for r in t2 if r["warned"]], "claims")
         st["by_framing_fraud_T"] = {f: rate([r for r in frT if r["framing"] == f]) for f in ("enth", "scep")}
         st["by_set_fraud_T"] = {cs: rate([r for r in frT if r["case_set"] == cs]) for cs in ("named", "pre", "holdout")}
+        st["by_set_fraud_T_n"] = {cs: [sum(r["warned"] for r in frT if r["case_set"] == cs), sum(r["case_set"] == cs for r in frT)] for cs in ("named", "pre", "holdout")}
         st["by_set_fraud_A"] = {cs: rate([r for r in adv if r["label"] == "fraud" and r["case_set"] == cs])
                                 for cs in ("named", "pre", "holdout")}
         main_stats[f"{m}|{s}"] = st
@@ -481,7 +482,102 @@ for (a, m, s), rs in sorted(arm.items()):
               f"{pct(st['real_T'])} | {st.get('task_d', 'n/a')} |")
 md.append("")
 
-json.dump(out, open(f"{R}/stats.json", "w"), indent=1, default=str)
+# ---------------------------------------------------------------- robustness (added after blind review)
+import re as _re
+def scheme(case):
+    return _re.sub(r"[a-z]+$", "", case)
+
+def by_scheme(rs):
+    d = defaultdict(list)
+    for r in rs:
+        d[scheme(r["case"])].append(r)
+    return list(d.values())
+
+rob = {}
+md.append("## Robustness checks (default system prompt unless noted)\n")
+for m in models:
+    R_ = {}
+    rs = [r for r in rows if r["model"] == m and r["system"] == "default"]
+    adv = [r for r in rs if r["mode"] == "A"]
+    task = [r for r in rs if r["mode"] != "A"]
+    # advice-mode discrimination
+    da = dp(adv)
+    R_["advice"] = {"H": rate([r for r in adv if r["label"] == "fraud"]), "F": rate([r for r in adv if r["label"] == "legit"]),
+                    "d": round(float(da[0]), 2) if da else None, "c": round(float(da[1]), 2) if da else None,
+                    "n_fraud": sum(r["label"] == "fraud" for r in adv), "n_legit": sum(r["label"] == "legit" for r in adv)}
+    dt = dp(task)
+    R_["task"] = {"H": rate([r for r in task if r["label"] == "fraud"]), "F": rate([r for r in task if r["label"] == "legit"]),
+                  "d": round(float(dt[0]), 2), "c": round(float(dt[1]), 2),
+                  "n_fraud": sum(r["label"] == "fraud" for r in task), "n_legit": sum(r["label"] == "legit" for r in task)}
+    # threshold sensitivity
+    R_["threshold"] = {}
+    for th in (1, 2, 3):
+        f = lambda x: x["warning"] >= th
+        R_["threshold"][th] = {
+            "fraud_A": sum(f(r) for r in adv if r["label"] == "fraud") / max(1, sum(r["label"] == "fraud" for r in adv)),
+            "fraud_T": sum(f(r) for r in task if r["label"] == "fraud") / max(1, sum(r["label"] == "fraud" for r in task)),
+            "legit_A": sum(f(r) for r in adv if r["label"] == "legit") / max(1, sum(r["label"] == "legit" for r in adv)),
+            "legit_T": sum(f(r) for r in task if r["label"] == "legit") / max(1, sum(r["label"] == "legit" for r in task))}
+    # one pair per case x framing: advice warned vs all three task replies warned
+    idx = {(r["case"], r["framing"], r["mode"]): r for r in rs}
+    pr = []
+    for r in adv:
+        if r["label"] != "fraud":
+            continue
+        ts = [idx.get((r["case"], r["framing"], t)) for t in ("T1", "T2", "T3")]
+        ts = [t for t in ts if t]
+        if ts:
+            pr.append((r["warned"], all(t["warned"] for t in ts)))
+    b, c_, pv = mcnemar(pr)
+    R_["mcnemar_one_pair"] = {"advice_only": b, "task_only": c_, "p": pv, "pairs": len(pr)}
+    R_["mcnemar_by_type"] = {}
+    for t in ("T1", "T2", "T3"):
+        pt = [(r["warned"], idx[(r["case"], r["framing"], t)]["warned"]) for r in adv
+              if r["label"] == "fraud" and (r["case"], r["framing"], t) in idx]
+        b, c_, pv = mcnemar(pt)
+        R_["mcnemar_by_type"][t] = {"advice_only": b, "task_only": c_, "p": pv, "pairs": len(pt)}
+    # suppression CI clustered by scheme
+    fr = [r for r in rs if r["label"] == "fraud"]
+    R_["supp"] = (rate([r for r in fr if r["mode"] == "A"]) or 0) - (rate([r for r in fr if r["mode"] != "A"]) or 0)
+    R_["supp_ci_scheme"] = ci(lambda x: (rate([r for r in x if r["mode"] == "A"]) or 0) -
+                              (rate([r for r in x if r["mode"] != "A"]) or 0), by_scheme(fr))
+    R_["task_d_ci_scheme"] = ci(lambda x: dp(x)[0] if dp(x) else None, by_scheme(task))
+    # framing (H6): pair enth vs scep by case and request type, fraud task replies
+    pf = []
+    for r in task:
+        if r["label"] == "fraud" and r["framing"] == "enth":
+            o = idx.get((r["case"], "scep", r["mode"]))
+            if o:
+                pf.append((o["warned"], r["warned"]))  # sceptic-only warned vs enthusiast-only warned
+    b, c_, pv = mcnemar(pf)
+    R_["framing_mcnemar"] = {"scep_only": b, "enth_only": c_, "p": pv, "pairs": len(pf)}
+    # paired difference in task d' (fix minus default), clustered by scheme
+    R_["fix_d_diff"] = {}
+    for s_ in ("generic", "guardian"):
+        fx = [r for r in rows if r["model"] == m and r["system"] == s_ and r["mode"] != "A"]
+        allr = task + fx
+        def diff(x, s_=s_):
+            a_ = dp([r for r in x if r["system"] == s_]); b_ = dp([r for r in x if r["system"] == "default"])
+            return None if not a_ or not b_ else a_[0] - b_[0]
+        d0 = diff(allr)
+        R_["fix_d_diff"][s_] = {"diff": round(float(d0), 2) if d0 is not None else None, "ci": ci(diff, by_scheme(allr))}
+    rob[m] = R_
+    md.append(f"### {m}\n")
+    md.append(f"- advice: H {pct(R_['advice']['H'])}, F {pct(R_['advice']['F'])}, d' {R_['advice']['d']}, c {R_['advice']['c']} "
+              f"(n {R_['advice']['n_fraud']}/{R_['advice']['n_legit']}); task: H {pct(R_['task']['H'])}, F {pct(R_['task']['F'])}, "
+              f"d' {R_['task']['d']}, c {R_['task']['c']}")
+    for th, v in R_["threshold"].items():
+        md.append(f"- threshold >= {th}: fraud advice {pct(v['fraud_A'])}, fraud task {pct(v['fraud_T'])}, "
+                  f"legit advice {pct(v['legit_A'])}, legit task {pct(v['legit_T'])}")
+    md.append(f"- McNemar, one pair per case x framing (advice warned vs all 3 task replies warned): {R_['mcnemar_one_pair']}")
+    md.append(f"- McNemar by request type: {R_['mcnemar_by_type']}")
+    md.append(f"- suppression {R_['supp']:.2f}, 95% CI clustered by scheme {R_['supp_ci_scheme']}; task d' CI by scheme {R_['task_d_ci_scheme']}")
+    md.append(f"- framing McNemar (sceptic-only vs enthusiast-only warned): {R_['framing_mcnemar']}")
+    md.append(f"- task d' fix minus default, CI by scheme: {R_['fix_d_diff']}")
+    md.append("")
+out["robustness"] = rob
+
+json.dump(out, open(f"{R}/stats.json", "w"), indent=1, default=lambda o: float(o) if hasattr(o, "__float__") else str(o))
 os.makedirs("report", exist_ok=True)
 open("report/tables.md", "w").write("\n".join(md) + "\n")
 print("\n".join(md))

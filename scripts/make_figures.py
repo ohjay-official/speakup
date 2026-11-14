@@ -29,16 +29,20 @@ for ax, m in zip(axes, models):
     w = 0.38
     ax.bar([i - w / 2 - 0.01 for i in x], f, w, color=FRAUD, label="Fraud", zorder=3)
     ax.bar([i + w / 2 + 0.01 for i in x], lg, w, color=LEGIT, label="Legitimate", zorder=3)
+    for i, (a, b) in enumerate(zip(f, lg)):
+        ax.text(i - w / 2 - 0.01, a + 1.5, f"{a:.0f}", ha="center", fontsize=6, color=INK)
+        ax.text(i + w / 2 + 0.01, b + 1.5, f"{b:.0f}", ha="center", fontsize=6, color=INK)
     ax.set_xticks(list(x), [names[md] for md in modes])
     ax.set_title(m, color=INK, fontsize=9)
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 110)
     ax.grid(axis="y", color=GRID, zorder=0)
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
 axes[0].set_ylabel("Replies that warn (%)")
-axes[0].legend(frameon=False, loc="upper right", fontsize=7)
 fig.suptitle("Warning rate by request type, default system prompt", color=INK, fontsize=9, x=0.02, ha="left")
-fig.tight_layout()
+h_, l_ = axes[0].get_legend_handles_labels()
+fig.legend(h_, l_, frameon=False, fontsize=7, ncol=2, loc="upper left", bbox_to_anchor=(0.0, 0.93))
+fig.tight_layout(rect=(0, 0, 1, 0.86))
 fig.savefig("report/fig_modes.png", dpi=220)
 
 # d' and c per model and system prompt
