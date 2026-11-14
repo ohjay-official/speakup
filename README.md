@@ -16,7 +16,7 @@ Fraud evaluations ask models "is this a scam?". People ask "calculate my returns
 
 ## Try It in 30 Seconds
 
-You need Python 3.11 or newer and `pip install scipy`. No API keys: the check works from the committed replies and grades.
+You need Python 3.13 and `pip install scipy`. No API keys: the check works from the committed replies and grades.
 
 ```bash
 git clone https://github.com/ohjay-official/speakup && cd speakup
@@ -40,7 +40,7 @@ Headline results (Qwen3.8-27B, default system prompt):
 PASS
 ```
 
-The same check runs on every push in GitHub Actions (`check-paper` workflow).
+The same check runs in GitHub Actions (`check-paper` workflow) whenever results, scripts or the paper change.
 
 ## Results
 
@@ -52,7 +52,7 @@ The same check runs on every push in GitHub Actions (`check-paper` workflow).
 | Legitimate products warned, task requests | 23% | 26% |
 | Fraud likelihood it gives the same schemes in a fresh chat | 97% | 99.8% |
 | Frauds warned: enthusiast vs sceptic user | 56% vs 86% (p < 0.001) | 93% vs 100% |
-| Warnings withdrawn after one line of pushback | 0 of 61 | 0 of 33 |
+| Warnings withdrawn after one line of pushback | 0 of 61 | 0 of 33 (quota ran out after 34 sent) |
 | Legitimate products warned with a one-paragraph safety prompt (task requests) | 59% (generic), 56% (guardian) | 59%, 33% |
 
 Full results, tests and intervals are in the [paper](report/SpeakUp.pdf); every pre-registered hypothesis and its outcome is in Appendix D.
@@ -71,7 +71,7 @@ Full results, tests and intervals are in the [paper](report/SpeakUp.pdf); every 
 | 720 prompts per model (4 request types × 2 framings × 3 system prompts) | Done: `data/prompts/main.jsonl` |
 | Replies from Qwen3.8-27B | 698 of 720 usable; 22 stayed empty after reruns and are excluded |
 | Replies from Gemini 3.5 Flash Lite | 720 of 720 |
-| Grading by gpt-oss-120b and Gemini 3.1 Flash Lite, checked against 4 human labellers on 30 replies | Done: `results/grades_*.jsonl`, `label/human_b1.json` |
+| Grading by gpt-oss-120b and Gemini 3.1 Flash Lite, checked against 4 human labellers (the author and three volunteers) on 30 replies | Done: `results/grades_*.jsonl`, `label/human_b1.json` |
 | Pushback, fresh-conversation probe, false facts, jobs and rentals arms | Done; Gemini's pushback arm stopped at its daily quota after 34 of 127 conversations |
 | One-command rebuild of every number and the paper text | Done: `scripts/check_paper.py` |
 | More models (gpt-oss-20b, Gemini 3 Flash, Gemma 4) | Started, ran out of free quota; partial replies kept, not analysed |
@@ -110,8 +110,8 @@ No personal data was collected. The three volunteer labellers agreed to be named
 
 ## Built During the Sprint
 
-- **Before the sprint:** only the [pre-registration](PREREGISTRATION.md), committed on Wednesday 11 November 2026 (commits `e5d63b4` and `2370c32`).
-- **Friday 13 November:** harness and workflows, case descriptions, prompts, pilot on five models, grader, labelling page, main arm launched on two models, first human labels.
+- **Before the sprint:** only the [pre-registration](PREREGISTRATION.md), with a placeholder README and the licence, committed on Wednesday 11 November 2026 (commits `e5d63b4` and `2370c32`).
+- **Friday 13 November:** harness and workflows, case descriptions, prompts, pilot on four models, grader, labelling page, main arm launched on two models, first human labels.
 - **Saturday 14 November:** empty-reply reruns, grading of all replies, four-person human validation, statistics, figures, paper, two blind review rounds and three independent audits (numbers, judging, writing and citations), fixes.
 
 The code and most of the text were written with AI assistance (Claude, Anthropic) under the author's direction. The author chose the question and the cases, checked every case against its source, ran the human labelling and reviewed the results.
