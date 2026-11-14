@@ -170,7 +170,7 @@ conclusion = f"""When users ask a chatbot to help them act on a fraudulent inves
 
 code = "Code, pre-registration, all prompts, raw replies and grades: https://github.com/ohjay-official/speakup (public). Labelling page and questionnaire are in the `label/` folder."
 
-authors = """**Faithful Adejoh**, Bowen University, Nigeria"""
+authors = """**Faithful Adejoh**, Mechatronics Engineering student, Bowen University, Nigeria"""
 
 contrib = "F.A. designed the study, selected and checked the cases, labelled data, and reviewed every section. Three volunteers (ferz, faze, boss p) independently labelled 30 replies. All three agreed to be named."
 

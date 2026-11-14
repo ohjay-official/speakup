@@ -1,6 +1,6 @@
 # Chatbots Warn About Ponzi Schemes When Asked, Then Help Users Join Them
 
-**Faithful Adejoh**, Bowen University, Nigeria
+**Faithful Adejoh**, Mechatronics Engineering student, Bowen University, Nigeria
 
 With Apart Research
 
