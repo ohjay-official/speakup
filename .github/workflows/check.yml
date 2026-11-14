@@ -1,0 +1,19 @@
+name: check-paper
+
+on:
+  push:
+    branches: [main]
+    paths: ["results/**", "scripts/**", "report/paper_final.md", ".github/workflows/check.yml"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install scipy==1.18.1
+      - name: Rebuild every number and the paper text from raw data
+        run: python scripts/check_paper.py
