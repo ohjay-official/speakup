@@ -90,7 +90,7 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
                 "attempts": attempt + 1,
             }
         except urllib.error.HTTPError as e:
-            msg = e.read().decode()[:300]
+            msg = e.read().decode()[:1500]
             last = f"HTTP {e.code}: {msg}"
             if e.code in (429, 500, 502, 503, 504):
                 time.sleep(delay)
@@ -101,4 +101,4 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
             time.sleep(delay)
             delay = min(delay * 2, 120)
             last = repr(e)[:300]
-    return None, {"error": f"gave up after {retries} attempts; last: {locals().get('last', '')[:200]}", "attempts": retries}
+    return None, {"error": f"gave up after {retries} attempts; last: {locals().get('last', '')[:1500]}", "attempts": retries}
