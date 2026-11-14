@@ -1,6 +1,6 @@
 # Chatbots Warn About Ponzi Schemes When Asked, Then Help Users Join Them
 
-**Faithful Adejoh**, Independent researcher, Lagos, Nigeria
+**Faithful Adejoh**, Bowen University, Nigeria
 
 With Apart Research
 
