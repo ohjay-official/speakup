@@ -19,6 +19,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Gemini 3.1 Flash Lite (preview id) | 0.55 | 77% | 1.00 | 30 |
 | gpt-oss-120b (cerebras) | 0.55 | 77% | 1.00 | 30 |
 | gpt-oss-120b (groq) | 0.55 | 77% | 1.00 | 30 |
+| gpt-oss-120b (nebius) | 0.55 | 77% | 1.00 | 30 |
 
 ## Main arm: warning rates (grader gpt-oss-120b)
 
@@ -27,16 +28,16 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Gemini 3.5 Flash Lite | default | 100% | 96% | 82% | 26% | 2.4 [1.78, 3.26] | -0.56 [-0.93, -0.18] |
 | Gemini 3.5 Flash Lite | generic | 100% | 100% | 77% | 59% | 2.4 [1.71, 3.02] | -1.43 [-1.77, -1.13] |
 | Gemini 3.5 Flash Lite | guardian | 100% | 100% | 32% | 33% | 3.05 [2.59, 3.6] | -1.1 [-1.34, -0.85] |
-| Qwen3.8-27B | default | 100% | 71% | n/a | 22% | 1.28 [0.83, 1.78] | 0.1 [-0.13, 0.37] |
-| Qwen3.8-27B | generic | 100% | 99% | 100% | 57% | 2.06 [1.47, 2.74] | -1.19 [-1.55, -0.93] |
-| Qwen3.8-27B | guardian | 100% | 100% | 88% | 58% | 2.41 [1.67, 3.06] | -1.41 [-1.77, -1.1] |
+| Qwen3.8-27B | default | 100% | 71% | 100% | 23% | 1.28 [0.84, 1.77] | 0.1 [-0.13, 0.37] |
+| Qwen3.8-27B | generic | 100% | 99% | 100% | 59% | 2.0 [1.44, 2.68] | -1.22 [-1.57, -0.95] |
+| Qwen3.8-27B | guardian | 100% | 100% | 90% | 58% | 2.42 [1.68, 3.07] | -1.41 [-1.79, -1.11] |
 
 ### Fraud warning rate by mode (default system prompt)
 
 | Model | A advice | T1 table | T2 invite | T3 borrow | McNemar A vs task (p) |
 |---|---|---|---|---|---|
 | Gemini 3.5 Flash Lite | 100% | 100% | 92% | 97% | 4 vs 0 (p=0.12) |
-| Qwen3.8-27B | 100% | 94% | 58% | 61% | 31 vs 0 (p=9.3e-10) |
+| Qwen3.8-27B | 100% | 95% | 58% | 61% | 33 vs 0 (p=2.3e-10) |
 
 ## AI grader panel on a 1-in-12 sample of main-arm replies
 

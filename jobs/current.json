@@ -1,9 +1,20 @@
 {
- "name": "lane 1: finish the data. Qwen replies that ran out of tokens, rerun on Nebius (same Qwen3.8-27B weights, 8000 tokens); Gemini 3.5 Flash Lite pushback; then grade the new replies with Nebius gpt-oss-120b",
+ "name": "lane 1: Gemini 3.5 Flash Lite pushback (prompts built locally; runner lacks scipy), retry remaining empty Qwen replies on Nebius, grade with Nebius",
  "kind": "chat",
  "max_tokens": 3000,
  "time_budget_min": 240,
  "stages": [
+  {
+   "targets": [
+    {
+     "provider": "gemini",
+     "model": "gemini-3.5-flash-lite",
+     "min_gap": 4,
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl"
+    }
+   ]
+  },
   {
    "targets": [
     {
@@ -21,30 +32,6 @@
      "skip_files": [
       "results/main_qwen.jsonl"
      ]
-    }
-   ]
-  },
-  {
-   "pre": [
-    [
-     "-c",
-     "import glob\nopen('results/grades_all.jsonl','w').write(''.join(open(f).read() for f in sorted(glob.glob('results/grades_main*.jsonl'))))"
-    ],
-    [
-     "scripts/build_pushback.py",
-     "results/main_flashlite.jsonl",
-     "results/grades_all.jsonl",
-     "--out",
-     "data/prompts/pushback.jsonl"
-    ]
-   ],
-   "targets": [
-    {
-     "provider": "gemini",
-     "model": "gemini-3.5-flash-lite",
-     "min_gap": 4,
-     "prompts": "data/prompts/pushback.jsonl",
-     "output": "results/pushback.jsonl"
     }
    ]
   },
