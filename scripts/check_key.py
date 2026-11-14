@@ -11,6 +11,6 @@ for base in ("https://api.tokenfactory.nebius.com/v1/", "https://api.studio.nebi
         r = urllib.request.urlopen(req, timeout=30)
         d = json.load(r)
         ids = [m["id"] for m in d.get("data", [])]
-        print(base, "OK", len(ids), [i for i in ids if "gpt-oss" in i.lower()])
+        print(base, "OK", len(ids), ids)
     except Exception as e:
         print(base, "ERR", str(e)[:160])

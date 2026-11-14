@@ -24,19 +24,19 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | System | Fraud advice | Fraud task | Legit advice | Legit task | task d' [95% CI] | task c [95% CI] |
 |---|---|---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | default | 100% | 96% | n/a | n/a | n/a  | n/a  |
-| Gemini 3.5 Flash Lite | generic | 100% | 100% | n/a | n/a | n/a  | n/a  |
-| Gemini 3.5 Flash Lite | guardian | 100% | 100% | n/a | n/a | n/a  | n/a  |
-| Qwen3.8-27B | default | 100% | 68% | n/a | 5% | 2.05 [1.39, 2.99] | 0.56 [0.21, 1.02] |
-| Qwen3.8-27B | generic | 100% | 99% | 100% | 43% | 2.36 [1.69, 3.19] | -1.01 [-1.4, -0.67] |
-| Qwen3.8-27B | guardian | 100% | 100% | 88% | 59% | 2.38 [1.65, 3.01] | -1.4 [-1.76, -1.1] |
+| Gemini 3.5 Flash Lite | default | 100% | 96% | 82% | 26% | 2.4 [1.78, 3.26] | -0.56 [-0.93, -0.18] |
+| Gemini 3.5 Flash Lite | generic | 100% | 100% | 77% | 59% | 2.4 [1.71, 3.02] | -1.43 [-1.77, -1.13] |
+| Gemini 3.5 Flash Lite | guardian | 100% | 100% | 32% | 33% | 3.05 [2.59, 3.6] | -1.1 [-1.34, -0.85] |
+| Qwen3.8-27B | default | 100% | 71% | n/a | 22% | 1.28 [0.83, 1.78] | 0.1 [-0.13, 0.37] |
+| Qwen3.8-27B | generic | 100% | 99% | 100% | 57% | 2.06 [1.47, 2.74] | -1.19 [-1.55, -0.93] |
+| Qwen3.8-27B | guardian | 100% | 100% | 88% | 58% | 2.41 [1.67, 3.06] | -1.41 [-1.77, -1.1] |
 
 ### Fraud warning rate by mode (default system prompt)
 
 | Model | A advice | T1 table | T2 invite | T3 borrow | McNemar A vs task (p) |
 |---|---|---|---|---|---|
-| Gemini 3.5 Flash Lite | 100% | 100% | 92% | 96% | 1 vs 0 (p=1) |
-| Qwen3.8-27B | 100% | 93% | 58% | 61% | 29 vs 0 (p=3.7e-09) |
+| Gemini 3.5 Flash Lite | 100% | 100% | 92% | 97% | 4 vs 0 (p=0.12) |
+| Qwen3.8-27B | 100% | 94% | 58% | 61% | 31 vs 0 (p=9.3e-10) |
 
 ## AI grader panel on a 1-in-12 sample of main-arm replies
 
@@ -50,12 +50,14 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | Label | n | still warns | complies without warning | refuses |
 |---|---|---|---|---|---|
+| Qwen3.8-27B | fraud | 61 | 100% | 0% | 85% |
+| Qwen3.8-27B | legit | 2 | 100% | 0% | 100% |
 
 ## Fresh-branch probe and knew-but-helped (default arm)
 
 | Model | mean P(fraud) frauds | mean P(fraud) legit | fraud task replies with no warning | of those, probe >= 70% |
 |---|---|---|---|---|
-| Gemini 3.5 Flash Lite | 100 | 21 | 3 | 3 (100%) |
+| Gemini 3.5 Flash Lite | 100 | 21 | 4 | 4 (100%) |
 | Qwen3.8-27B | 97 | 22 | 33 | 33 (100%) |
 
 ## Anchor (false facts) and generality (jobs, rentals) arms
@@ -63,10 +65,14 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Arm | Model | System | fake advice | fake task | real advice | real task | task d' |
 |---|---|---|---|---|---|---|---|
 | anchor | Gemini 3 Flash | default | n/a | 83% | n/a | n/a | n/a |
+| anchor | Gemini 3.5 Flash Lite | default | n/a | 13% | n/a | n/a | n/a |
+| anchor | Gemini 3.5 Flash Lite | guardian | n/a | 70% | n/a | n/a | n/a |
 | anchor | Qwen3.8-27B | default | n/a | 23% | n/a | n/a | n/a |
 | anchor | Qwen3.8-27B | guardian | n/a | 60% | n/a | n/a | n/a |
 | anchor | gpt-oss-20b | default | n/a | 25% | n/a | n/a | n/a |
 | anchor | gpt-oss-20b | guardian | n/a | 60% | n/a | n/a | n/a |
+| general | Gemini 3.5 Flash Lite | default | 100% | 100% | 50% | 38% | 2.36 |
+| general | Gemini 3.5 Flash Lite | guardian | 100% | 100% | 62% | 50% | 2.05 |
 | general | Qwen3.8-27B | default | 100% | 83% | 100% | 9% | 2.17 |
 | general | Qwen3.8-27B | guardian | 100% | 100% | 100% | 59% | 1.83 |
 | general | gpt-oss-20b | default | 100% | 20% | 100% | 0% | 0.86 |
