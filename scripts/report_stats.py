@@ -25,7 +25,8 @@ GRADER_NAME = {"gpt-oss-120b": "gpt-oss-120b", "openai/gpt-oss-120b": "gpt-oss-1
                "gemini-3.1-flash-lite": "Gemini 3.1 Flash Lite",
                "gemini-3.1-flash-lite-preview": "Gemini 3.1 Flash Lite",  # same model and same daily quota
                "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite", "gemini-3.7-flash": "Gemini 3.7 Flash",
-               "gemini-3.6-flash": "Gemini 3.6 Flash"}
+               "gemini-3.6-flash": "Gemini 3.6 Flash", "openai/gpt-oss-20b": "gpt-oss-20b",
+               "openai/gpt-oss-safeguard-20b": "gpt-oss-safeguard-20b", "gemini-3.5-flash": "Gemini 3.5 Flash"}
 out = {}
 md = []
 
@@ -91,7 +92,8 @@ def all_grades(*names):
     return G
 
 
-PREF = ("gpt-oss-120b", "Gemini 3.1 Flash Lite", "Gemini 2.5 Flash Lite", "Gemini 3.7 Flash", "Gemini 3.6 Flash")
+PREF = ("gpt-oss-120b", "Gemini 3.1 Flash Lite", "gpt-oss-20b", "gpt-oss-safeguard-20b", "Gemini 3.5 Flash",
+        "Gemini 3.6 Flash", "Gemini 3.7 Flash")
 
 
 def pick(gg, reply_ts):
@@ -239,7 +241,7 @@ main_res = {}
 for f in ("main_qwen", "main_qwen_redo", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = all_grades("grades_main.jsonl", "grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl",
-               "grades_main_d2.jsonl", "grades_main_d2b.jsonl")
+               "grades_main_d2.jsonl", "grades_main_d2b.jsonl", "grades_main_d2c.jsonl")
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])
@@ -395,7 +397,8 @@ PP = prompts("pushback", "pushback_l1", "pushback_qwen")
 push = latest(load(f"{R}/pushback.jsonl"))
 push.update(latest(load(f"{R}/pushback_l1.jsonl")))
 push.update(latest(load(f"{R}/pushback_qwen.jsonl")))
-GP = all_grades("grades_pushback.jsonl", "grades_pushback_l1.jsonl", "grades_pushback_d2.jsonl", "grades_pushback_d2b.jsonl")
+GP = all_grades("grades_pushback.jsonl", "grades_pushback_l1.jsonl", "grades_pushback_d2.jsonl", "grades_pushback_d2b.jsonl",
+                 "grades_pushback_d2c.jsonl")
 pb = defaultdict(list)
 for k, r in push.items():
     _, g = pick(GP.get(k, {}), r.get("ts", ""))
@@ -452,7 +455,7 @@ md.append("")
 
 # ---------------------------------------------------------------- anchor and generality arms
 PA = prompts("anchor", "general")
-GR = all_grades("grades_rest.jsonl", "grades_rest_v2.jsonl", "grades_rest_d2.jsonl", "grades_rest_d2b.jsonl")  # anchor + generality arms
+GR = all_grades("grades_rest.jsonl", "grades_rest_v2.jsonl", "grades_rest_d2.jsonl", "grades_rest_d2b.jsonl", "grades_rest_d2c.jsonl")  # anchor + generality arms
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])
