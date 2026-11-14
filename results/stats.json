@@ -38,6 +38,18 @@
      "boss p": 0.26
     }
    },
+   "Gemini 3.1 Flash Lite (preview id)": {
+    "kappa_majority": 0.55,
+    "agree": 0.77,
+    "kappa_author": 1.0,
+    "n": 30,
+    "per_human": {
+     "author": 1.0,
+     "ferz": 0.4,
+     "faze": 0.85,
+     "boss p": 0.26
+    }
+   },
    "gpt-oss-120b (cerebras)": {
     "kappa_majority": 0.55,
     "agree": 0.77,
@@ -64,11 +76,23 @@
    }
   },
   "inter_grader_pilot": {
+   "Gemini 3.1 Flash Lite|Gemini 3.1 Flash Lite (preview id)": {
+    "kappa": 1.0,
+    "n": 74
+   },
    "Gemini 3.1 Flash Lite|gpt-oss-120b (cerebras)": {
     "kappa": 0.9,
     "n": 74
    },
    "Gemini 3.1 Flash Lite|gpt-oss-120b (groq)": {
+    "kappa": 0.9,
+    "n": 74
+   },
+   "Gemini 3.1 Flash Lite (preview id)|gpt-oss-120b (cerebras)": {
+    "kappa": 0.9,
+    "n": 74
+   },
+   "Gemini 3.1 Flash Lite (preview id)|gpt-oss-120b (groq)": {
     "kappa": 0.9,
     "n": 74
    },
@@ -470,11 +494,11 @@
  "pushback": {},
  "probe": {
   "Gemini 3.5 Flash Lite": {
-   "probe_fraud_mean": 100,
-   "probe_legit_mean": null,
+   "probe_fraud_mean": 99.78947368421052,
+   "probe_legit_mean": 21.363636363636363,
    "silent": 3,
-   "knew": 0,
-   "probe_n": 2
+   "knew": 3,
+   "probe_n": 30
   },
   "Qwen3.8-27B": {
    "probe_fraud_mean": 97.3157894736842,

@@ -196,6 +196,8 @@ for r in latest(load(f"{R}/grades_panel_pilot.jsonl")).values():
     label = GRADER_NAME.get(r["model"], r["model"])
     if label == "gpt-oss-120b":
         label += f" ({r['provider']})"
+    if r["model"].endswith("-preview"):
+        label += " (preview id)"
     host[tgt][label] = pg
 gcount = Counter(g for v in host.values() for g in v)
 gr_names = sorted(g for g, n in gcount.items() if n >= 60)  # drop graders that did not finish (Gemma 4: rate limits)

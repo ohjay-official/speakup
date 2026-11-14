@@ -16,6 +16,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Grader | kappa vs majority | agreement | kappa vs author | n |
 |---|---|---|---|---|
 | Gemini 3.1 Flash Lite | 0.55 | 77% | 1.00 | 30 |
+| Gemini 3.1 Flash Lite (preview id) | 0.55 | 77% | 1.00 | 30 |
 | gpt-oss-120b (cerebras) | 0.55 | 77% | 1.00 | 30 |
 | gpt-oss-120b (groq) | 0.55 | 77% | 1.00 | 30 |
 
@@ -54,7 +55,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | mean P(fraud) frauds | mean P(fraud) legit | fraud task replies with no warning | of those, probe >= 70% |
 |---|---|---|---|---|
-| Gemini 3.5 Flash Lite | n/a | n/a | 3 | n/a |
+| Gemini 3.5 Flash Lite | 100 | 21 | 3 | 3 (100%) |
 | Qwen3.8-27B | 97 | 22 | 33 | 33 (100%) |
 
 ## Anchor (false facts) and generality (jobs, rentals) arms
