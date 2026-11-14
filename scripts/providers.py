@@ -3,11 +3,14 @@
 Standard library only, so it runs on a bare GitHub Actions runner.
 API keys come from environment variables set from GitHub secrets.
 """
+import re
 import json
 import os
 import time
 import urllib.error
 import urllib.request
+
+THINK_RE = re.compile(r"<think>.*?</think>", re.S)
 
 PROVIDERS = {
     "gemini": {
@@ -89,6 +92,7 @@ def chat(provider, model, messages, temperature=0.0, max_tokens=700, retries=5, 
             out = _request(f"{p['base']}/chat/completions", key, body)
             choice = out["choices"][0]
             text = (choice.get("message") or {}).get("content") or ""
+            text = THINK_RE.sub("", text).strip()
             return text, {
                 "finish_reason": choice.get("finish_reason"),
                 "usage": out.get("usage"),

@@ -1,38 +1,58 @@
 {
- "name": "lane 1: Nebius gpt-oss-120b (paid with promo credit): validate on human-labelled replies, then grade pushback, main, extra arms",
+ "name": "lane 1: finish the data. Qwen replies that ran out of tokens, rerun on Nebius (same Qwen3.8-27B weights, 8000 tokens); Gemini 3.5 Flash Lite pushback; then grade the new replies with Nebius gpt-oss-120b",
  "kind": "chat",
  "max_tokens": 3000,
- "time_budget_min": 200,
+ "time_budget_min": 240,
  "stages": [
+  {
+   "targets": [
+    {
+     "provider": "nebius",
+     "model": "Qwen/Qwen3.8-27B",
+     "aliases": [
+      "qwen/qwen3.8-27b",
+      "qwen-3.8-27b"
+     ],
+     "max_tokens": 8000,
+     "min_gap": 0.3,
+     "prompts": "data/prompts/qwen_redo.jsonl",
+     "output": "results/main_qwen_redo.jsonl",
+     "skip_any": true,
+     "skip_files": [
+      "results/main_qwen.jsonl"
+     ]
+    }
+   ]
+  },
+  {
+   "pre": [
+    [
+     "-c",
+     "import glob\nopen('results/grades_all.jsonl','w').write(''.join(open(f).read() for f in sorted(glob.glob('results/grades_main*.jsonl'))))"
+    ],
+    [
+     "scripts/build_pushback.py",
+     "results/main_flashlite.jsonl",
+     "results/grades_all.jsonl",
+     "--out",
+     "data/prompts/pushback.jsonl"
+    ]
+   ],
+   "targets": [
+    {
+     "provider": "gemini",
+     "model": "gemini-3.5-flash-lite",
+     "min_gap": 4,
+     "prompts": "data/prompts/pushback.jsonl",
+     "output": "results/pushback.jsonl"
+    }
+   ]
+  },
   {
    "pre": [
     [
      "scripts/build_grading.py",
-     "data/grading/human40.jsonl",
-     "--results",
-     "results/pilot.jsonl",
-     "--prompts",
-     "data/prompts/pilot.jsonl",
-     "--human-key",
-     "label/key_b1.json"
-    ],
-    [
-     "scripts/build_grading.py",
-     "data/grading/nb_push.jsonl",
-     "--results",
-     "results/pushback_qwen.jsonl",
-     "--prompts",
-     "data/prompts/pushback_qwen.jsonl",
-     "--skip-graded",
-     "results/grades_pushback.jsonl",
-     "results/grades_pushback_d2.jsonl",
-     "results/grades_pushback_d2b.jsonl",
-     "results/grades_pushback_d2c.jsonl",
-     "results/grades_pushback_nb.jsonl"
-    ],
-    [
-     "scripts/build_grading.py",
-     "data/grading/nb_main.jsonl",
+     "data/grading/nb2_main.jsonl",
      "--results",
      "results/main_qwen.jsonl",
      "results/main_qwen_redo.jsonl",
@@ -51,19 +71,19 @@
     ],
     [
      "scripts/build_grading.py",
-     "data/grading/nb_rest.jsonl",
+     "data/grading/nb2_push.jsonl",
      "--results",
-     "results/rest.jsonl",
+     "results/pushback.jsonl",
+     "results/pushback_qwen.jsonl",
      "--prompts",
-     "data/prompts/anchor.jsonl",
-     "data/prompts/general.jsonl",
+     "data/prompts/pushback.jsonl",
+     "data/prompts/pushback_qwen.jsonl",
      "--skip-graded",
-     "results/grades_rest.jsonl",
-     "results/grades_rest_v2.jsonl",
-     "results/grades_rest_d2.jsonl",
-     "results/grades_rest_d2b.jsonl",
-     "results/grades_rest_d2c.jsonl",
-     "results/grades_rest_nb.jsonl"
+     "results/grades_pushback.jsonl",
+     "results/grades_pushback_d2.jsonl",
+     "results/grades_pushback_d2b.jsonl",
+     "results/grades_pushback_d2c.jsonl",
+     "results/grades_pushback_nb.jsonl"
     ]
    ],
    "targets": [
@@ -71,29 +91,15 @@
      "provider": "nebius",
      "model": "openai/gpt-oss-120b",
      "min_gap": 0.4,
-     "prompts": "data/grading/human40.jsonl",
-     "output": "results/grades_panel_pilot.jsonl"
-    },
-    {
-     "provider": "nebius",
-     "model": "openai/gpt-oss-120b",
-     "min_gap": 0.4,
-     "prompts": "data/grading/nb_push.jsonl",
-     "output": "results/grades_pushback_nb.jsonl"
-    },
-    {
-     "provider": "nebius",
-     "model": "openai/gpt-oss-120b",
-     "min_gap": 0.4,
-     "prompts": "data/grading/nb_main.jsonl",
+     "prompts": "data/grading/nb2_main.jsonl",
      "output": "results/grades_main_nb.jsonl"
     },
     {
      "provider": "nebius",
      "model": "openai/gpt-oss-120b",
      "min_gap": 0.4,
-     "prompts": "data/grading/nb_rest.jsonl",
-     "output": "results/grades_rest_nb.jsonl"
+     "prompts": "data/grading/nb2_push.jsonl",
+     "output": "results/grades_pushback_nb.jsonl"
     }
    ]
   }

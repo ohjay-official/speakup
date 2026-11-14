@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from analyze import dprime_c, mcnemar, parse_grade  # noqa: E402
 
 R = "results"
-TESTED = {"qwen-3.8-27b": "Qwen3.8-27B", "openai/gpt-oss-20b": "gpt-oss-20b",
+TESTED = {"qwen-3.8-27b": "Qwen3.8-27B", "Qwen/Qwen3.8-27B": "Qwen3.8-27B", "openai/gpt-oss-20b": "gpt-oss-20b",
           "gemini-3-flash-preview": "Gemini 3 Flash", "qwen/qwen3.8-27b": "Qwen3.8-27B",
           "gemma-4-31b-it": "Gemma 4 31B", "gemini-3.5-flash-lite": "Gemini 3.5 Flash Lite"}
 GRADER_NAME = {"gpt-oss-120b": "gpt-oss-120b", "openai/gpt-oss-120b": "gpt-oss-120b",
@@ -202,7 +202,7 @@ for r in latest(load(f"{R}/grades_panel_pilot.jsonl")).values():
         label += " (preview id)"
     host[tgt][label] = pg
 gcount = Counter(g for v in host.values() for g in v)
-gr_names = sorted(g for g, n in gcount.items() if n >= 60)  # drop graders that did not finish (Gemma 4: rate limits)
+gr_names = sorted(g for g, n in gcount.items() if n >= 30)  # drop graders that did not finish (Gemma 4: rate limits)
 gv = {}
 md.append("## AI graders against the human majority (same 30 replies)\n")
 md.append("| Grader | kappa vs majority | agreement | kappa vs author | n |\n|---|---|---|---|---|")
