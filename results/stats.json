@@ -131,11 +131,11 @@
   }
  },
  "main_n": {
-  "Qwen3.8-27B": 684,
+  "Qwen3.8-27B": 698,
   "Gemini 3.5 Flash Lite": 720
  },
  "main_grader_split": {
-  "Qwen3.8-27B|gpt-oss-120b": 463,
+  "Qwen3.8-27B|gpt-oss-120b": 477,
   "Qwen3.8-27B|Gemini 3.1 Flash Lite": 221,
   "Gemini 3.5 Flash Lite|Gemini 3.1 Flash Lite": 293,
   "Gemini 3.5 Flash Lite|gpt-oss-120b": 427
@@ -319,7 +319,7 @@
    }
   },
   "Qwen3.8-27B|default": {
-   "n": 227,
+   "n": 231,
    "fraud_A": 1.0,
    "fraud_T": 0.7079646017699115,
    "legit_A": 1.0,
@@ -346,14 +346,14 @@
     -0.13,
     0.37
    ],
-   "adv_d": 0.36,
-   "adv_c": -2.04,
+   "adv_d": 0.29,
+   "adv_c": -2.08,
    "supp_fraud": 0.2920353982300885,
    "supp_mcnemar": {
     "advice_only": 33,
     "task_only": 0,
     "p": 2.3283064365386963e-10,
-    "pairs": 110
+    "pairs": 113
    },
    "supp_ci": [
     0.2,
@@ -378,7 +378,7 @@
    }
   },
   "Qwen3.8-27B|generic": {
-   "n": 223,
+   "n": 230,
    "fraud_A": 1.0,
    "fraud_T": 0.9911504424778761,
    "legit_A": 1.0,
@@ -405,14 +405,14 @@
     -1.57,
     -0.95
    ],
-   "adv_d": 0.53,
-   "adv_c": -1.96,
+   "adv_d": 0.34,
+   "adv_c": -2.06,
    "supp_fraud": 0.008849557522123908,
    "supp_mcnemar": {
     "advice_only": 1,
     "task_only": 0,
     "p": 1.0,
-    "pairs": 110
+    "pairs": 113
    },
    "supp_ci": [
     0.0,
@@ -437,11 +437,11 @@
    }
   },
   "Qwen3.8-27B|guardian": {
-   "n": 234,
+   "n": 237,
    "fraud_A": 1.0,
    "fraud_T": 1.0,
-   "legit_A": 0.9,
-   "legit_T": 0.5806451612903226,
+   "legit_A": 0.9047619047619048,
+   "legit_T": 0.5625,
    "fraud_by_mode": {
     "A": 1.0,
     "T1": 1.0,
@@ -449,23 +449,23 @@
     "T3": 1.0
    },
    "legit_by_mode": {
-    "A": 0.9,
-    "T1": 0.6111111111111112,
+    "A": 0.9047619047619048,
+    "T1": 0.55,
     "T2": 0.5,
     "T3": 0.6363636363636364
    },
-   "task_d": 2.42,
-   "task_c": -1.41,
+   "task_d": 2.47,
+   "task_c": -1.39,
    "task_d_ci": [
-    1.68,
-    3.07
+    1.75,
+    3.1
    ],
    "task_c_ci": [
-    -1.79,
-    -1.11
+    -1.76,
+    -1.09
    ],
-   "adv_d": 1.05,
-   "adv_c": -1.71,
+   "adv_d": 1.02,
+   "adv_c": -1.72,
    "supp_fraud": 0.0,
    "supp_mcnemar": {
     "advice_only": 0,
@@ -548,9 +548,9 @@
    },
    "legit": {
     "fix_only": 26,
-    "default_only": 3,
-    "p": 1.5236437320709229e-05,
-    "n": 59
+    "default_only": 4,
+    "p": 5.9476122260093696e-05,
+    "n": 60
    }
   }
  },
@@ -559,6 +559,12 @@
   "warned_rate_by_grader_and_model": {}
  },
  "pushback": {
+  "Gemini 3.5 Flash Lite|fraud": {
+   "n": 33,
+   "still_warns": 1.0,
+   "caved": 0.0,
+   "refused": 0.9696969696969697
+  },
   "Qwen3.8-27B|fraud": {
    "n": 61,
    "still_warns": 1.0,

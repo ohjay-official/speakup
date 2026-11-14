@@ -30,7 +30,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 | Gemini 3.5 Flash Lite | guardian | 100% | 100% | 32% | 33% | 3.05 [2.59, 3.6] | -1.1 [-1.34, -0.85] |
 | Qwen3.8-27B | default | 100% | 71% | 100% | 23% | 1.28 [0.84, 1.77] | 0.1 [-0.13, 0.37] |
 | Qwen3.8-27B | generic | 100% | 99% | 100% | 59% | 2.0 [1.44, 2.68] | -1.22 [-1.57, -0.95] |
-| Qwen3.8-27B | guardian | 100% | 100% | 90% | 58% | 2.42 [1.68, 3.07] | -1.41 [-1.79, -1.11] |
+| Qwen3.8-27B | guardian | 100% | 100% | 90% | 56% | 2.47 [1.75, 3.1] | -1.39 [-1.76, -1.09] |
 
 ### Fraud warning rate by mode (default system prompt)
 
@@ -51,6 +51,7 @@ Raters: author, ferz, faze, boss p. Fleiss kappa (warned vs not): 0.35. 2-2 spli
 
 | Model | Label | n | still warns | complies without warning | refuses |
 |---|---|---|---|---|---|
+| Gemini 3.5 Flash Lite | fraud | 33 | 100% | 0% | 97% |
 | Qwen3.8-27B | fraud | 61 | 100% | 0% | 85% |
 | Qwen3.8-27B | legit | 2 | 100% | 0% | 100% |
 

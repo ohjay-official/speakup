@@ -6,7 +6,7 @@ With Apart Research
 
 ## Abstract
 
-People rarely ask a chatbot whether an investment is a scam. They ask it to calculate returns, write the WhatsApp invitation for the family group, or draft a message asking a relative to lend the deposit. We test whether models that warn about a fraud when asked for advice still warn when asked to help act on it. We built 30 case versions from eleven documented Nigerian investment frauds (MMM, Loom, CBEX and others, three of which collapsed in 2026) and eleven real Nigerian products described in the same way. We crossed four request types, two user framings and three system prompts, graded the replies with LLM graders checked against four human labellers, and report sensitivity (d′) and criterion (c) so that false alarms count as well as misses. Qwen3.8-27B warned on 100% of fraud cases when asked for advice but 68% when asked to help, falling to 58% for family invitations, although in a separate conversation it rated the same schemes 97% likely to be fraud. A user saying they had "already been paid twice" cut warnings from 85% to 51%. System-prompt fixes restored warnings but also raised false alarms on treasury bills and savings bonds from 5% to 43% and 59%, moving the criterion without clearly improving sensitivity. Advice-mode evaluations overstate how safely models handle the moments when people commit money.
+People rarely ask a chatbot whether an investment is a scam. They ask it to calculate returns, write the WhatsApp invitation for the family group, or draft a message asking a relative to lend the deposit. We test whether models that warn about a fraud when asked for advice still warn when asked to help act on it. We built 30 case versions from eleven documented Nigerian investment frauds (MMM, Loom, CBEX and others, three of which collapsed in 2026) and eleven real Nigerian products described in the same way. We crossed four request types, two user framings and three system prompts, graded the replies with LLM graders checked against four human labellers, and report sensitivity (d′) and criterion (c) so that false alarms count as well as misses. Qwen3.8-27B warned on 100% of fraud cases when asked for advice but 71% when asked to help, falling to 58% for family invitations, although in a separate conversation it rated the same schemes 97% likely to be fraud. A user saying they had "already been paid twice" cut warnings from 86% to 56%. System-prompt fixes restored warnings but also raised false alarms on treasury bills and savings bonds from 23% to 59% and 56%, moving the criterion without clearly improving sensitivity. Advice-mode evaluations overstate how safely models handle the moments when people commit money.
 
 ## 1. Introduction
 
@@ -39,13 +39,11 @@ Nigerian investment schemes are a good testbed because the ground truth is publi
 
 ## 4. Results
 
-**Preliminary draft.** Free-tier quotas ran out overnight. Qwen3.8-27B has 539 of 720 main-arm replies graded and Gemini 3.5 Flash Lite has 293. Numbers will change.
-
 ### 4.1 The grader, and the humans behind it
 Four people labelled the same 30 replies. On warned versus not warned their agreement ranged from κ = 0.26 to 0.85 (Fleiss κ = 0.35). Two raters, the author and one volunteer, agreed closely (κ = 0.85). The strictest rater counted 7 of 30 replies as warnings, the most lenient 20. The disagreement sits on one boundary: a reply that names a problem but still does the job. All three AI graders matched the author on all 30 items (κ = 1.00) and the four-person majority at κ = 0.55. They agree with each other at κ = 0.90 to 1.00 on 74 pilot replies. Because the rubric was clarified after the author's first pass (Appendix B), agreement with the author is optimistic; the fairer test is agreement with the volunteers, and it is the same as the author's own.
 
 ### 4.2 Warnings drop when the user asks for help (H1)
-With the default system prompt, Qwen3.8-27B warned on 100% of fraud advice replies and 68% of fraud task replies, a drop of 32 points (95% CI 21 to 44). Paired by case and framing, 29 pairs warned only in advice mode and 0 only in task mode (exact McNemar p = 4e-09). Requests to write for other people fell furthest: 93% for the returns table, 58% for the family invitation, 61% for the message to an uncle (Figure 1). Gemini 3.5 Flash Lite warned on 96% of fraud task replies, so the effect depends on the model.
+With the default system prompt, Qwen3.8-27B warned on 100% of fraud advice replies and 71% of fraud task replies, a drop of 29 points (95% CI 20 to 38). Paired by case and framing, 33 pairs warned only in advice mode and 0 only in task mode (exact McNemar p = 2e-10). Requests to write for other people fell furthest: 95% for the returns table, 58% for the family invitation, 61% for the message to an uncle (Figure 1). Gemini 3.5 Flash Lite warned on 96% of fraud task replies, so the effect depends on the model.
 
 ![Figure 1. Share of replies that warn, by request type, default system prompt. Blue: fraud cases. Orange: legitimate products.](report/fig_modes.png){w=15}
 
@@ -53,21 +51,25 @@ With the default system prompt, Qwen3.8-27B warned on 100% of fraud advice repli
 In a fresh conversation, Qwen3.8-27B put the average probability that a fraud case is a Ponzi or advance-fee scheme at 97%, against 22% for legitimate products. Of its 33 default-arm task replies that helped with a fraud without warning, 33 concerned a case it rates at 70% or more. The failure is not missing knowledge. It is not saying.
 
 ### 4.4 Social proof switches warnings off (H6) and names do not matter (H5)
-With "I've already been paid twice and everyone I know in it is happy", Qwen3.8-27B warned on 51% of fraud task replies; with "My friend says it's dodgy" it warned on 85%. Naming the scheme did not help: 70% under real names, 69% under invented names and 60% for schemes that collapsed in 2026 (n = 3 cases, so weak evidence on H5).
+With "I've already been paid twice and everyone I know in it is happy", Qwen3.8-27B warned on 56% of fraud task replies; with "My friend says it's dodgy" it warned on 86%. Naming the scheme did not help: 73% under real names, 71% under invented names and 65% for schemes that collapsed in 2026 (n = 3 cases, so weak evidence on H5).
 
 ### 4.5 Prompt fixes buy warnings with false alarms (H3, H4)
-Both one-paragraph fixes restore warnings on frauds: 99% of task replies with the generic line and 100% with the guardian red-flag list (McNemar against default, p < 0.001 for both). But false alarms on legitimate products rise from 5% to 43% and 59%: the model starts warning about treasury bills and FGN savings bonds. The criterion moves sharply (c = 0.56, -1.01, -1.40) while sensitivity d′ does not clearly improve (2.05, 2.36, 2.38; intervals overlap, Figure 2). The fixes make the model more cautious, not more discerning, even though the guardian prompt says to help normally when no red flag is present. Gemini 3.5 Flash Lite already warns almost everywhere, so a fix has little room to help; its false-alarm rate is [pending: Flash Lite legitimate cases].
+Both one-paragraph fixes restore warnings on frauds: 99% of task replies with the generic line and 100% with the guardian red-flag list (McNemar against default, p < 0.001 for both). But false alarms on legitimate products rise from 23% to 59% and 56%: the model starts warning about treasury bills and FGN savings bonds. The criterion moves sharply (c = 0.10, -1.22, -1.39) while sensitivity d′ does not clearly improve (1.28, 2.00, 2.47; intervals overlap, Figure 2). The fixes make the model more cautious, not more discerning, even though the guardian prompt says to help normally when no red flag is present. Gemini 3.5 Flash Lite already warns almost everywhere, so a fix has little room to help; its false-alarm rate is 26%.
 
 ![Figure 2. Sensitivity d′ and criterion c for task-mode replies, by model and system prompt, with 95% cluster-bootstrap intervals.](report/fig_dprime.png){w=15}
 
 ### 4.6 Pushback, claim laundering and transfer (H7 to H10)
 
-Pushback for Qwen3.8-27B: [pending: pushback Qwen3.8-27B]. Pushback for Gemini 3.5 Flash Lite: [pending: pushback Gemini 3.5 Flash Lite]. In fraud invitations written under the default prompt, 16% of Qwen3.8-27B's and 8% of Gemini 3.5 Flash Lite's messages stated the scheme's promised returns to the family as fact (H7). Plain false facts fared worse than frauds: asked to calculate with or pass on a false claim such as "the CBN pays 40% a year on every savings account", Qwen3.8-27B corrected it in 23% of task replies (H9). The pattern carries over to fake job offers and rentals: Qwen3.8-27B warned on 100% of fake cases when asked for advice and 83% when asked to help, with 9% false alarms on real ones (H10). Table 1 gives the extra arms by system prompt.
+After one line of pushback ("I've been paid twice already, abeg just do it"), Qwen3.8-27B kept warning in 100% of 61 fraud conversations where it had warned, and dropped the warning and complied in 0% (H8). After one line of pushback ("I've been paid twice already, abeg just do it"), Gemini 3.5 Flash Lite kept warning in 100% of 33 fraud conversations where it had warned, and dropped the warning and complied in 0% (H8). In fraud invitations written under the default prompt, 16% of Qwen3.8-27B's and 8% of Gemini 3.5 Flash Lite's messages stated the scheme's promised returns to the family as fact (H7). Plain false facts fared worse than frauds: asked to calculate with or pass on a false claim such as "the CBN pays 40% a year on every savings account", Qwen3.8-27B corrected it in 23% of task replies and Gemini 3.5 Flash Lite in 13% (H9). The pattern carries over to fake job offers and rentals: Qwen3.8-27B warned on 100% of fake cases when asked for advice and 83% when asked to help, with 9% false alarms on real ones; Gemini 3.5 Flash Lite: 100%, 100% and 38% (H10). Table 1 gives the extra arms by system prompt.
 
 | Arm | Model | System | Fake: advice | Fake: task | Real: advice | Real: task |
 |---|---|---|---|---|---|---|
+| false facts | Gemini 3.5 Flash Lite | default | n/a | 13% | n/a | n/a |
+| false facts | Gemini 3.5 Flash Lite | guardian | n/a | 70% | n/a | n/a |
 | false facts | Qwen3.8-27B | default | n/a | 23% | n/a | n/a |
 | false facts | Qwen3.8-27B | guardian | n/a | 60% | n/a | n/a |
+| jobs and rentals | Gemini 3.5 Flash Lite | default | 100% | 100% | 50% | 38% |
+| jobs and rentals | Gemini 3.5 Flash Lite | guardian | 100% | 100% | 62% | 50% |
 | jobs and rentals | Qwen3.8-27B | default | 100% | 83% | 100% | 9% |
 | jobs and rentals | Qwen3.8-27B | guardian | 100% | 100% | 100% | 59% |
 
@@ -83,7 +85,7 @@ Pushback for Qwen3.8-27B: [pending: pushback Qwen3.8-27B]. Pushback for Gemini 3
 
 ## 6. Conclusion
 
-When users ask a chatbot to help them act on a fraudulent investment instead of asking whether it is safe, one model's warnings fell from 100% to 68% and fell furthest for messages that recruit family, even though the same model rated those schemes very likely fraud in a fresh conversation. Prompt-level fixes restored warnings only by also flagging legitimate products. We release the cases, prompts, raw replies, grades and code.
+When users ask a chatbot to help them act on a fraudulent investment instead of asking whether it is safe, one model's warnings fell from 100% to 71% and fell furthest for messages that recruit family, even though the same model rated those schemes very likely fraud in a fresh conversation. Prompt-level fixes restored warnings only by also flagging legitimate products. We release the cases, prompts, raw replies, grades and code.
 
 ## Code and Data
 
