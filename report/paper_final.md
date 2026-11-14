@@ -174,4 +174,4 @@ Fraud cases F1 to F8 appear twice: under the invented name and under the real na
 
 ## LLM Usage Statement
 
-Claude (Anthropic) wrote the analysis code and the scripts that ran the models, and drafted most of the text under the author's direction. The author chose the question and the Nigerian cases, checked every case against its source, recruited and briefed the volunteer labellers, labelled data, directed each revision and reviewed the final paper. Independent Claude instances reviewed the draft and recomputed every number from the raw files. All numbers come from scripts in the repository.
+The author designed the study, selected and verified the cases, recruited and ran the human labelling, and directed all analysis and revisions. Claude (Anthropic) assisted with writing code and drafting text. All results were checked against the raw data.

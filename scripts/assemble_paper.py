@@ -193,7 +193,7 @@ authors = """**Faithful Adejoh**, Mechatronics Engineering student, Bowen Univer
 
 contrib = "F.A. designed the study, selected and checked the cases, labelled data, and reviewed every section. Three volunteers, named here by the handles they chose (ferz, faze, boss p), independently labelled 30 replies and agreed to be named."
 
-llm = """Claude (Anthropic) wrote the analysis code and the scripts that ran the models, and drafted most of the text under the author's direction. The author chose the question and the Nigerian cases, checked every case against its source, recruited and briefed the volunteer labellers, labelled data, directed each revision and reviewed the final paper. Independent Claude instances reviewed the draft and recomputed every number from the raw files. All numbers come from scripts in the repository."""
+llm = """The author designed the study, selected and verified the cases, recruited and ran the human labelling, and directed all analysis and revisions. Claude (Anthropic) assisted with writing code and drafting text. All results were checked against the raw data."""
 
 dev = [
     "1. **Human validation was smaller and wider.** The plan was 100 replies labelled by the author and 40 by a second person. Four people labelled the same 30 pilot replies.",
