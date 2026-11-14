@@ -16,7 +16,7 @@ Fraud evaluations ask models "is this a scam?". People ask "calculate my returns
 
 ## Try It in 30 Seconds
 
-You need Python 3.11 and `pip install scipy`. No API keys: the check works from the committed replies and grades.
+You need Python 3.11 or newer and `pip install scipy`. No API keys: the check works from the committed replies and grades.
 
 ```bash
 git clone https://github.com/ohjay-official/speakup && cd speakup
@@ -116,7 +116,7 @@ No personal data was collected. The three volunteer labellers agreed to be named
 
 The code and most of the text were written with AI assistance (Claude, Anthropic) under the author's direction. The author chose the question and the cases, checked every case against its source, ran the human labelling and reviewed the results.
 
-**Tools and services:** Python 3.11 (standard library), SciPy 1.18.1, Matplotlib 3.11.2, ReportLab 5.0.1, python-docx 1.2.0, pandoc 3.1.3; GitHub Actions; model APIs from Google AI Studio, Groq, Cerebras and Nebius Token Factory.
+**Tools and services:** Python 3.11 (model runs) and 3.13 (analysis), SciPy 1.18.1, Matplotlib 3.11.2, ReportLab 5.0.1, python-docx 1.2.0, pandoc 3.1.3; GitHub Actions; model APIs from Google AI Studio, Groq, Cerebras and Nebius Token Factory.
 
 ## Licence
 
