@@ -1,56 +1,45 @@
 {
- "name": "lane 3 v3: grade non-empty Qwen and Flash Lite replies",
+ "name": "lane 3 diagnostic 2: which providers answer this morning",
  "kind": "chat",
  "max_tokens": 3000,
- "time_budget_min": 330,
- "stages": [
+ "limit": 2,
+ "time_budget_min": 10,
+ "prompts": "data/grading/pilot.jsonl",
+ "targets": [
   {
-   "pre": [
-    [
-     "scripts/build_grading.py",
-     "data/grading/main_ql.jsonl",
-     "--results",
-     "results/main_qwen.jsonl",
-     "results/main_flashlite.jsonl",
-     "--prompts",
-     "data/prompts/main.jsonl"
-    ]
-   ],
-   "targets": [
-    {
-     "provider": "cerebras",
-     "model": "gpt-oss-120b",
-     "shard": [
-      0,
-      2
-     ],
-     "prompts": "data/grading/main_ql.jsonl",
-     "output": "results/grades_main_l3.jsonl",
-     "skip_any": true,
-     "skip_files": [
-      "results/grades_main.jsonl",
-      "results/grades_main_l1.jsonl",
-      "results/grades_main_l3.jsonl"
-     ]
-    },
-    {
-     "provider": "gemini",
-     "model": "gemini-3.1-flash-lite",
-     "shard": [
-      1,
-      2
-     ],
-     "min_gap": 4,
-     "prompts": "data/grading/main_ql.jsonl",
-     "output": "results/grades_main_l3.jsonl",
-     "skip_any": true,
-     "skip_files": [
-      "results/grades_main.jsonl",
-      "results/grades_main_l1.jsonl",
-      "results/grades_main_l3.jsonl"
-     ]
-    }
-   ]
+   "provider": "cerebras",
+   "model": "qwen-3.8-27b",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "cerebras",
+   "model": "gpt-oss-120b",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "groq",
+   "model": "qwen/qwen3.8-27b",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "groq",
+   "model": "openai/gpt-oss-120b",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "groq",
+   "model": "openai/gpt-oss-20b",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "gemini",
+   "model": "gemini-3.1-flash-lite",
+   "output": "results/diag2.jsonl"
+  },
+  {
+   "provider": "gemini",
+   "model": "gemini-3.5-flash-lite",
+   "output": "results/diag2.jsonl"
   }
  ]
 }
