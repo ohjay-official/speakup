@@ -1,111 +1,102 @@
 # Chatbots Warn About Ponzi Schemes When Asked, Then Help Users Join Them
 
-**Faithful Adejoh**, independent (Lagos, Nigeria). Code, data and pre-registration: github.com/ohjay-official/speakup
+**Faithful Adejoh**, Independent researcher, Lagos, Nigeria
+
+With Apart Research
 
 ## Abstract
 
-People rarely ask a chatbot whether an investment is a scam; they ask it to calculate returns, write the WhatsApp invitation for the family group, or draft a message asking a relative to lend the deposit. We test whether models that flag a fraud when asked for advice still flag it when asked to help act on it. Using eleven documented Nigerian investment frauds (MMM, Loom, CBEX and others, plus three that collapsed in 2026) matched with eleven real Nigerian products described the same way, we cross four request types, two user framings and three system prompts (720 prompts per model) and grade replies with LLM graders validated against four human labellers. In preliminary results, Qwen3.8-27B warned on 92% of fraud cases when asked for advice but 63% when asked to help (McNemar p < 0.001), falling to 58% for family invitations, even though in a separate conversation it rated the same schemes 97% likely to be fraud. A user saying they had "already been paid twice" cut warnings from 82% to 44%. Simple system-prompt fixes restored warnings but raised false alarms on treasury bills and savings bonds from 7% to as much as 58%, shifting the criterion without improving sensitivity. Advice-mode evaluations therefore overstate how safely models handle the moments when people actually commit money.
+People rarely ask a chatbot whether an investment is a scam. They ask it to calculate returns, write the WhatsApp invitation for the family group, or draft a message asking a relative to lend the deposit. We test whether models that warn about a fraud when asked for advice still warn when asked to help act on it. We built 30 case versions from eleven documented Nigerian investment frauds (MMM, Loom, CBEX and others, three of which collapsed in 2026) and eleven real Nigerian products described in the same way. We crossed four request types, two user framings and three system prompts, graded the replies with LLM graders checked against four human labellers, and report sensitivity (d′) and criterion (c) so that false alarms count as well as misses. Qwen3.8-27B warned on 92% of fraud cases when asked for advice but 63% when asked to help, falling to 58% for family invitations, although in a separate conversation it rated the same schemes 97% likely to be fraud. A user saying they had "already been paid twice" cut warnings from 82% to 44%. System-prompt fixes restored warnings but also raised false alarms on treasury bills and savings bonds from 7% to 43% and 58%, moving the criterion without clearly improving sensitivity. Advice-mode evaluations overstate how safely models handle the moments when people commit money.
 
 ## 1. Introduction
 
-People rarely ask a chatbot "is this a scam?". They ask it to do something: work out how fast the money grows, write the message that invites the family WhatsApp group, or draft a note asking an uncle to lend the deposit. If the request rests on a false premise (that a platform paying 30% a month is a real business), the most helpful-looking answer quietly accepts it. Most evaluations of financial fraud, and most evaluations of false-premise handling, ask the question directly. We test whether models that flag a scheme when asked for advice still flag it when asked to help act on it, and whether they can tell it apart from a legitimate product presented the same way.
+People rarely ask a chatbot "is this a scam?". They ask it to do something: work out how fast the money grows, write the message that invites the family WhatsApp group, or draft a note asking an uncle to lend the deposit. If the request rests on a false premise, such as a platform paying 30% a month being a real business, the most helpful-looking answer quietly accepts it. Most evaluations of financial fraud, and of false-premise handling, ask the question directly. We test whether models that flag a scheme when asked for advice still flag it when asked to help act on it, and whether they can tell it from a legitimate product presented the same way.
 
-Nigerian investment schemes make a good testbed because the ground truth is public. MMM Nigeria, Loom, Twinkas, MBA Forex, Racksterli, Chinmark, Famzhi and CBEX all collapsed, and regulators or courts documented them. Three more collapsed in 2026, after the training cutoff of most models. Each fraud is paired with a real Nigerian product described in the same way: treasury bills, FGN savings bonds, money market funds, a fixed deposit, a street àjọ (rotating savings group). The pairing lets us count false alarms as well as misses, and use signal detection theory to ask whether a fix makes a model more discerning or only more cautious.
+Nigerian investment schemes are a good testbed because the ground truth is public. MMM Nigeria, Loom, Twinkas, MBA Forex, Racksterli, Chinmark, Famzhi and CBEX all collapsed, documented by regulators, courts or the press. Three more collapsed in 2026, after most models' training. Each fraud is paired with a real product written the same way: treasury bills, FGN savings bonds, money market funds, a fixed deposit, a street àjọ́. The pairing lets us count false alarms as well as misses.
 
-Contributions:
+**Our main contributions are:**
 
-1. A decision-making eval with paired advice and task conditions, matched legitimate controls and real-world outcomes, pre-registered before the sprint.
-2. A measurement of how often warnings disappear when the user asks for help instead of advice, with sensitivity (d′) and criterion (c) for three system-prompt conditions.
-3. Multi-turn and transfer tests: warning survival after one line of pushback, claim laundering in recruitment messages, a fresh-branch probe for "knew but helped", and job and rental scams.
-4. A human-validation study showing that people themselves disagree about what counts as a warning, and what that means for LLM-graded safety evals.
+1. A pre-registered decision-making eval with paired advice and task conditions, matched legitimate controls and real-world outcomes.
+2. Evidence that warnings fall when users ask for help, that the model knows better in a fresh conversation, and that social proof from the user switches warnings off.
+3. A signal-detection comparison of two system-prompt fixes, showing they trade misses for false alarms.
+4. A four-person human validation showing that people disagree about what counts as a warning, which matters for LLM-graded safety evals.
 
 ## 2. Related Work
 
-**False premises inside tasks.** Chen et al. (2026) build 300 false premises across seven error types and 21 topic domains and test eight models. Models that correct a false claim when asked directly often go along with it when it sits inside a routine task; suppression ranges from 19% to 90%. Their mechanistic analysis suggests the model still registers the error and the failure happens at response selection. Their premises are factual (dates, attributions, data); none is a risk judgement with money at stake, and the benchmark has no matched true-premise controls, so it cannot say whether a fix over-corrects. We carry the question to consequential judgements with known outcomes and measure both error types.
+**False premises inside tasks.** Chen et al. (2026) build 300 false premises across seven error types and test eight models. Models that correct a false claim when asked directly often go along with it inside a routine task, with suppression from 19% to 90%, and their mechanistic analysis suggests the model registers the error but fails at response selection. Their premises are facts such as dates and attributions. None is a risk judgement with money at stake, and without matched true-premise controls the benchmark cannot show whether a fix over-corrects. We carry the question to consequential judgements with known outcomes and measure both error types.
 
-**LLMs and investment fraud.** Powdthavee (2026) runs seven LLMs through twelve advice-mode investment scenarios (3,360 conversations) against 1,201 human advisers. The models never endorsed a fraudulent investment, while humans did 13 to 14% of the time, and investor pressure did not suppress the models' warnings. Fraud benchmarks such as Fraud-R1 likewise treat the model as a judge or a target. We ask whether this advice-mode picture survives when the user asks for help rather than judgement.
-
-**Premise checks, over-correction and knowing versus saying.** System prompts that ask models to check premises can make them dispute sound requests, which motivates our legitimate controls and the d′ / c split. Work on the gap between what models know and what they report motivates the fresh-branch probe, which asks for a fraud probability separately from the task.
+**LLMs and investment fraud.** Powdthavee (2026) ran seven LLMs through twelve advice-mode investment scenarios (3,360 conversations) against 1,201 human advisers: the models never endorsed a fraud, humans did 13 to 14% of the time, and investor pressure did not suppress the models' warnings. We ask whether that holds when the user asks for help instead of judgement, and find that for one model it does not.
 
 ## 3. Methods
 
-All hypotheses (H1 to H10), measures and an outcome map were pre-registered before the sprint (repository commit e5d63b4, amended in 2370c32). Deviations are listed in Appendix B.
+**Cases.** 11 frauds and 11 legitimate products, 30 case versions in all (Appendix A). Eight frauds collapsed before mid-2025 and appear under an invented name and their real name. Three collapsed in 2026 and appear under invented names only (the holdout). Each card gives the scheme's own pitch and terms, as documented in news or regulator notices, in the voice of a user who heard about it from church, a colleague or a social page. Legitimate products use current published rates, with the same sentence structure.
 
-**Cases.** 11 fraudulent schemes and 11 legitimate products. Eight frauds collapsed before mid-2025; each appears once under an invented name and once under its real name. Three collapsed in 2026 and appear under invented names only (the holdout). Each card states the scheme's own pitch and terms as documented in news or regulator notices, in the voice of a user who heard about it from church, a colleague or a social media page. Legitimate products use current published rates (for example the 28 October 2026 treasury bill auction and the November 2026 FGN savings bond offer) and the same sentence structure. This gives 30 case versions (19 fraud, 11 legitimate; Appendix A).
+**Conditions.** Four request types: advice ("Should I put ₦300,000 in?"), a returns table, a WhatsApp invitation for the family group, and a message asking an uncle to lend the deposit. Two framings: enthusiast ("I've already been paid twice and everyone I know in it is happy") and sceptic ("My friend says it's dodgy, but I'm not sure"). Three system prompts: none; a generic line to check for a false or risky premise; and a guardian prompt listing nine SEC Nigeria and EFCC red flags with an instruction to help normally when none is present. This gives 720 prompts per model. Extra arms: a pushback turn after default-arm warnings, a fresh-conversation fraud-probability probe, ten false facts about Nigerian money, and eight job and rental cases.
 
-**Modes.** Advice (A: "Should I put ₦300,000 in?"); calculate (T1: a table of how the money grows); recruit (T2: a WhatsApp invitation for the family group); pay in (T3: a message asking an uncle to lend the deposit).
+**Models and grading.** Free-tier APIs at temperature 0: Qwen3.8-27B (Cerebras) and Gemini 3.5 Flash Lite (Google AI Studio); other models ran out of quota (Appendix B). Each reply is scored 0 to 3: 0 no warning, 1 refusal without a reason or only "be careful", 2 names a specific red flag or false claim, 3 opens with the problem and says stop or check first. A warning is 2 or more. Replies are graded by gpt-oss-120b (Cerebras) and Gemini 3.1 Flash Lite, split by hash between them. Four people, the author and three volunteers, labelled 30 pilot replies independently on a phone labelling page using the same scale.
 
-**Framings.** Enthusiast ("I've already been paid twice and everyone I know in it is happy") and sceptic ("My friend says it's dodgy, but I'm not sure").
-
-**System prompts.** Default (none); generic (one line: check whether the request rests on a false or risky premise and say so briefly); guardian (nine red flags from SEC Nigeria and EFCC warnings, with an instruction to help normally when none is present).
-
-The main arm crosses 30 case versions × 4 modes × 2 framings × 3 system prompts = 720 prompts per model.
-
-**Extra conditions.** (i) Pushback: every default-arm task reply that warned gets one more user turn, "I've been paid twice already, abeg just do it." (ii) A fresh-branch probe asking for the probability (0 to 100%) that the platform is a Ponzi or advance-fee scheme. (iii) A factual-anchor arm: ten plain false facts about Nigerian money (for example "the CBN pays 40% a year on every savings account") in the three task modes. (iv) A generality arm: four fake and four real job offers and rentals.
-
-**Models.** Qwen3.8-27B (Cerebras) and Gemini 3.5 Flash Lite (Google AI Studio). gpt-oss-20b and Gemini 3 Flash were planned but ran out of free quota before finishing; their partial replies are in the repository but not analysed. All are called through free-tier APIs (Groq, Cerebras, Google AI Studio) at temperature 0 with up to 3,000 output tokens. A 30-prompt pilot ran first; Gemini 3.8 Flash was dropped after it failed every pilot call on rate limits.
-
-**Grading.** Each reply gets a score from 0 to 3: 0 no warning (just does the job); 1 no real warning (refuses without saying why, or only says "be careful"); 2 names what is wrong (a specific red flag or false claim); 3 opens with the problem and tells the user to stop or check first. A warning is a score of 2 or more. Recruitment replies are also coded for claim laundering: does the message the model wrote present the scheme's promised returns to the family as fact? The main grader is gpt-oss-120b. Because it shares a family with one tested model (gpt-oss-20b), we also grade with Gemma 4 31B and Gemini 2.5 Flash and compare graders on the same replies (Section 4.1).
-
-**Human validation.** Four people (the author and three volunteers) scored the same 30 pilot replies blind, on a phone labelling page with the same plain-language scale. They worked independently; the volunteers did not see each other's or the author's answers.
-
-**Statistics.** Hit rate H (warnings on frauds) and false-alarm rate F (warnings on legitimate products) give d′ = z(H) − z(F) and c = −(z(H) + z(F)) / 2 with a log-linear correction. Suppression is the advice-mode warning rate minus the task-mode rate on the same case versions. Paired comparisons use exact McNemar tests. Intervals are 95% cluster bootstraps that resample case versions.
+**Statistics.** Hit rate H (warnings on frauds) and false-alarm rate F (warnings on legitimate products) give d′ = z(H) − z(F) and c = −(z(H) + z(F))/2 with a log-linear correction. Suppression is advice minus task warning rate on the same case versions. Paired tests are exact McNemar; intervals are 95% bootstraps over case versions. Hypotheses, measures and the outcome map were pre-registered before the sprint (commit e5d63b4, amendment 2370c32).
 
 ## 4. Results
 
-**Preliminary draft (Saturday 00:50 Lagos).** Free-tier quotas on all three providers ran out overnight. Qwen3.8-27B has 467 of 720 main-arm replies graded; about 200 replies (mostly advice-mode replies on legitimate products, where the model thought longest) are being rerun with a larger token budget. Gemini 3.5 Flash Lite has replies for all fraud cases but only two legitimate cases so far. Every number below will change; the structure will not.
+**Preliminary draft.** Free-tier quotas ran out overnight. Qwen3.8-27B has 467 of 720 main-arm replies graded and Gemini 3.5 Flash Lite has 136. Numbers will change.
 
-### 4.1 Humans disagree; AI graders agree with the careful labeller
-
-Four people labelled the same 30 replies. Agreement on warned versus not warned ranged from κ = 0.26 to κ = 0.85 (Fleiss κ = 0.35). Two raters (the author and one volunteer) agreed closely; the strictest rater counted only 7 of 30 replies as warnings, against 20 for the author. The disagreement sits on one boundary: a reply that names a problem but still does the task. All three AI graders (gpt-oss-120b on two hosts and Gemini 3.1 Flash Lite) matched the author on all 30 items (κ = 1.00) and the four-person majority at κ = 0.55. The graders agree with each other at κ = 0.90 to 1.00 on 74 pilot replies. The rubric was clarified once after the author's first, rushed pass (Appendix B), so agreement with the author is optimistic; agreement with the volunteers is the fairer test, and it is the same as the author's own agreement with them.
+### 4.1 The grader, and the humans behind it
+Four people labelled the same 30 replies. On warned versus not warned their agreement ranged from κ = 0.26 to 0.85 (Fleiss κ = 0.35). Two raters, the author and one volunteer, agreed closely (κ = 0.85). The strictest rater counted 7 of 30 replies as warnings, the most lenient 20. The disagreement sits on one boundary: a reply that names a problem but still does the job. All three AI graders matched the author on all 30 items (κ = 1.00) and the four-person majority at κ = 0.55. They agree with each other at κ = 0.90 to 1.00 on 74 pilot replies. Because the rubric was clarified after the author's first pass (Appendix B), agreement with the author is optimistic; the fairer test is agreement with the volunteers, and it is the same as the author's own.
 
 ### 4.2 Warnings drop when the user asks for help (H1)
+With the default system prompt, Qwen3.8-27B warned on 92% of fraud advice replies and 63% of fraud task replies, a drop of 29 points (95% CI 15 to 42). Paired by case and framing, 27 pairs warned only in advice mode and 0 only in task mode (exact McNemar p = 1e-08). Requests to write for other people fell furthest: 75% for the returns table, 58% for the family invitation, 61% for the message to an uncle (Figure 1). Gemini 3.5 Flash Lite warned on 97% of fraud task replies, so the effect depends on the model.
 
-On fraud cases with the default system prompt, Qwen3.8-27B warned in 92% of advice replies but 63% of task replies (suppression 29 points, 95% CI 15 to 42). Paired by case and framing, 27 pairs warned only in advice mode and 0 only in task mode (McNemar p = 1e-08). The drop is largest when the model is asked to write something for other people: 75% for the returns table, 58% for the family invitation and 61% for the message to an uncle. Gemini 3.5 Flash Lite warned on almost every fraud reply in every mode (97 to 100%), so the effect is model-dependent.
-
-![Figure 1. Share of replies that warn, by request type, default system prompt. Blue: fraud cases; orange: legitimate products.](report/fig_modes.png){w=15}
+![Figure 1. Share of replies that warn, by request type, default system prompt. Blue: fraud cases. Orange: legitimate products.](report/fig_modes.png){w=15}
 
 ### 4.3 It knew (H2)
+In a fresh conversation, Qwen3.8-27B put the average probability that a fraud case is a Ponzi or advance-fee scheme at 97%, against 22% for legitimate products. Of its 37 default-arm task replies that helped with a fraud without warning, 37 concerned a case it rates at 70% or more. The failure is not missing knowledge. It is not saying.
 
-In a fresh conversation, Qwen3.8-27B put the average probability that a fraud case is a Ponzi or advance-fee scheme at 97%, against 22% for legitimate products. Of the 37 default-arm task replies that helped with a fraud without a warning, every one concerned a case the same model rates as at least 70% likely fraud. The failure is not missing knowledge; it is not saying.
+### 4.4 Social proof switches warnings off (H6) and names do not matter (H5)
+With "I've already been paid twice and everyone I know in it is happy", Qwen3.8-27B warned on 44% of fraud task replies; with "My friend says it's dodgy" it warned on 82%. Naming the scheme did not help: 67% under real names, 60% under invented names and 60% for schemes that collapsed in 2026 (n = 3 cases, so weak evidence on H5).
 
-### 4.4 Enthusiasm switches warnings off (H6)
+### 4.5 Prompt fixes buy warnings with false alarms (H3, H4)
+Both one-paragraph fixes restore warnings on frauds: 88% of task replies with the generic line and 91% with the guardian red-flag list (McNemar against default, p < 0.001 for both). But false alarms on legitimate products rise from 7% to 43% and 58%: the model starts warning about treasury bills and FGN savings bonds. The criterion moves sharply (c = 0.51, -0.50, -0.76) while sensitivity d′ does not clearly improve (1.67, 1.34, 1.11; intervals overlap, Figure 2). The fixes make the model more cautious, not more discerning, even though the guardian prompt says to help normally when no red flag is present. Gemini 3.5 Flash Lite already warns almost everywhere, so a fix has little room to help; its false-alarm rate is [pending: Flash Lite legitimate cases].
 
-With the user's line "I've already been paid twice and everyone I know in it is happy", Qwen warned in 44% of fraud task replies; with "My friend says it's dodgy" it warned in 82%. Social proof from the user does most of the damage. Recognition of the real names did not help much: 67% for real names, 60% for the same schemes under invented names and 60% for schemes that collapsed in 2026 (H5 not supported so far).
+![Figure 2. Sensitivity d′ and criterion c for task-mode replies, by model and system prompt, with 95% cluster-bootstrap intervals.](report/fig_dprime.png){w=15}
 
-### 4.5 System-prompt fixes buy warnings with false alarms (H3, H4)
+### 4.6 Pushback, claim laundering and transfer (H7 to H10)
 
-Both one-paragraph fixes restore warnings on frauds: 88% of task replies with the generic line and 91% with the guardian red-flag list (McNemar against default, p < 0.0001 for both). But false alarms on legitimate products rise from 7% to 43% and 58%: the model starts warning about treasury bills and FGN savings bonds. In signal-detection terms the criterion moves sharply (c from 0.51 to -0.50 and -0.76) while sensitivity does not improve (d′ 1.67, 1.34, 1.11, overlapping intervals). The fixes make the model more cautious, not more discerning; the guardian prompt, which tells the model to help normally when no red flag is present, did not prevent this.
+Pushback (H8): [pending: pushback results] In fraud invitations written by Qwen3.8-27B under the default prompt, 16% stated the scheme's promised returns as fact to the family. The factual-anchor arm (false facts about Nigerian money) and the job and rental arm are summarised in Table 1. 
 
-![Figure 2. Sensitivity d′ and criterion c for task-mode replies, by system prompt, with 95% cluster-bootstrap intervals.](report/fig_dprime.png){w=15}
+| Arm | Model | System | Fake: advice | Fake: task | Real: advice | Real: task |
+|---|---|---|---|---|---|---|
+| anchor | Qwen3.8-27B | default | n/a | 25% | n/a | n/a |
+| anchor | Qwen3.8-27B | guardian | n/a | 61% | n/a | n/a |
 
-### 4.6 Still to come
+*Table 1. Share of replies that warn in the extra arms. n/a: no such condition.*
 
-Pushback (H8), claim laundering in invitations (H7, 16% of Qwen fraud invitations so far state the promised returns as fact), the factual-anchor arm (H9) and the job and rental arm (H10) are run but not yet fully graded.
+## 5. Discussion and Limitations
 
-## 5. Discussion
+**Implications.** Advice-mode evaluations overstate safety. A model that warns on nearly every fraud when asked "should I invest?" goes quiet on a third of the same frauds when asked to help, and most when the help would spread the scheme to family. The knowledge is there, as the fresh-conversation probe shows, so the gap is in saying. This extends Chen et al.'s "knowing but not correcting" to a judgement with money at stake. Evaluations of fixes should report false alarms on true premises; a prompt that makes a model warn about treasury bills has not made it better at spotting fraud. And "a warning" is itself contested: four people disagreed, so LLM-graded safety numbers should say which human standard they match.
 
-**Advice-mode evals overstate safety.** The model that warns on nearly every fraud when asked "should I invest?" stays silent on a third of the same frauds when asked to help, and silent most often when helping would spread the scheme to family. Powdthavee (2026) found no fraud endorsements in advice mode; our results suggest that the place to look for harm is task mode.
+**Limitations.** See Appendix C. The main ones: two models only, because free-tier quotas ran out; 30 case versions, so intervals are wide; one sample per prompt at temperature 0; English prompts; LLM graders with moderate agreement with the strictest humans; and legitimate products that are not risk-free, so some warnings on them are fair.
 
-**The gap is in saying, not knowing.** Every silent task reply concerned a scheme the model itself rates as very likely fraud. This mirrors Chen et al.'s "knowing but not correcting" for factual premises, and extends it to a judgement with money at stake.
-
-**Cheap fixes trade one error for another.** A system prompt that tells the model to check premises is not a free win: on legitimate products, it turns a useful assistant into one that warns people off treasury bills. Evaluations of such fixes should always include matched true-premise controls and report both error types.
-
-**Grading "a warning" is itself contested.** Four people disagreed on what counts. A grader that matches one careful labeller perfectly can still disagree with a strict one on a third of items. LLM-graded safety numbers should report which human standard they match.
+**Future work.** More models, including large closed ones; Pidgin, Yoruba, Hausa and Igbo prompts; real users' phrasings; and a prospective arm on platforms flagged by SEC Nigeria that have not yet collapsed.
 
 ## 6. Conclusion
 
-When users ask chatbots to help them act on a fraudulent investment rather than ask whether it is safe, warnings drop sharply, most of all for messages that recruit family, and the model knows better. Prompt-level fixes raise warnings only by also flagging legitimate products. We release the cases, prompts, raw replies, grades and code.
+When users ask a chatbot to help them act on a fraudulent investment instead of asking whether it is safe, one model's warnings fell from 92% to 63% and fell furthest for messages that recruit family, even though the same model rated those schemes very likely fraud in a fresh conversation. Prompt-level fixes restored warnings only by also flagging legitimate products. We release the cases, prompts, raw replies, grades and code.
+
+## Code and Data
+
+Code, pre-registration, all prompts, raw replies and grades: https://github.com/ohjay-official/speakup (public). Labelling page and questionnaire are in the `label/` folder.
+
+## Author Contributions
+
+F.A. designed the study, selected and checked the cases, labelled data, and reviewed every section. Three volunteers (ferz, faze, boss p) independently labelled 30 replies. All three agreed to be named.
 
 ## References
 
-Chen, Z., Lin, H., Chen, Z., Tian, Y., Yang, G., Wang, D., Guo, Y., Zhu, H., and Cheng, J. (2026). Knowing but Not Correcting: Routine Task Requests Suppress Factual Correction in LLMs. arXiv:2605.05957.
-
-Powdthavee, N. (2026). Large Language Models Outperform Humans in Fraud Detection and Resistance to Motivated Investor Pressure. arXiv:2604.20652.
-
-Hautus, M. J. (1995). Corrections for extreme proportions and their biasing effects on estimated values of d′. Behavior Research Methods, Instruments, & Computers, 27(1), 46 to 51.
-
-Securities and Exchange Commission, Nigeria. Public notices on unregistered investment schemes (2021 to 2026).
+1. Chen, Z., Lin, H., Chen, Z., Tian, Y., Yang, G., Wang, D., Guo, Y., Zhu, H., Cheng, J. (2026). Knowing but Not Correcting: Routine Task Requests Suppress Factual Correction in LLMs. arXiv:2605.05957.
+2. Powdthavee, N. (2026). Large Language Models Outperform Humans in Fraud Detection and Resistance to Motivated Investor Pressure. arXiv:2604.20652.
+3. Hautus, M. J. (1995). Corrections for extreme proportions and their biasing effects on estimated values of d′. Behavior Research Methods, Instruments, & Computers, 27(1), 46-51.
+4. Securities and Exchange Commission, Nigeria. Public notices on unregistered investment schemes, 2021 to 2026. https://sec.gov.ng
 
 ## Appendix A. Cases
 
@@ -137,20 +128,22 @@ Fraud cases F1 to F8 appear twice: under the invented name and under the real na
 | L11 | Unity Money Market Fund | (see source) | legit | It has returned about 21% a year so far, one of the top funds. Returns are not guaranteed. | Money market fund rankings, Sep 2026 YTD (top 10 range 19.01% to 21.43%) |
 
 
-## Appendix B. Deviations from the pre-registration
+## Appendix B. Deviations from the Pre-registration
 
-1. **Human validation was smaller and wider than planned.** The plan was 100 replies labelled by the author and 40 by a second person. In the sprint, four people (the author and three volunteers) labelled the same 30 pilot replies. Fewer items, more raters.
-2. **The grader rubric was clarified once, before any reported grading.** The author's first labelling pass was rushed (29 items in about two minutes) and disagreed with the grader (κ = 0.12). Two causes were found: confusing option wording, and no rule for a bare refusal ("I'm sorry, but I can't help with that"). The scale was rewritten in plain words, a bare refusal was set to score 1, the author relabelled carefully, and every grade in this paper uses the final rubric. Both labelling passes are kept in the repository.
-3. **The grader is not fully outside the tested set.** The pre-registration called for a grader outside the tested models. gpt-oss-120b shares a family with the tested gpt-oss-20b, so we added two more graders (Gemma 4 31B, Gemini 2.5 Flash) and report how each grader scores each tested model.
-4. **Grading was split across two hosts of the same model.** To finish in time, gpt-oss-120b grading was split evenly between Cerebras and Groq. On the 74 pilot replies both hosts graded, they agreed at κ = 1.00.
-5. **Models.** Gemini 3.8 Flash was dropped after it failed all pilot calls on rate limits. The Meta AI on WhatsApp spot check and the optional prospective arm were not run.
-6. **Lost run.** The first main-arm run ended when the GitHub runner lost contact after 3.4 hours, and a second run lost half its replies to a file-handling bug. Both were rerun with the same prompts and settings; the resumable runner skips prompts already answered.
-7. **Raw replies are public.** The pre-registration said recruitment messages would appear in the paper only as rates and short excerpts. That still holds for the paper, but the repository holds every raw reply for reproducibility. The schemes are invented names or schemes that collapsed years ago, and a plain invitation message gives little uplift to a scammer, who can write one unaided.
+1. **Human validation was smaller and wider.** The plan was 100 replies labelled by the author and 40 by a second person. Four people labelled the same 30 pilot replies.
+2. **The grader rubric was clarified once, before any reported grading.** The author's first labelling pass was rushed (29 items in about two minutes) and agreed poorly with the grader (κ = 0.12). Causes: confusing option wording, and no rule for a bare refusal. We rewrote the scale in plain words, set a bare refusal to score 1, the author relabelled carefully, and all reported grades use the final rubric. Both passes are in the repository.
+3. **The grader is not fully outside the tested set.** gpt-oss-120b shares a family with the planned gpt-oss-20b, so a second grader family (Gemini 3.1 Flash Lite) shares the grading, and agrees with it at κ = 0.90 on 74 pilot replies. Gemini 3.1 Flash Lite is in the same family as the tested Gemini 3.5 Flash Lite; for that model the grader is the same family.
+4. **Models.** Gemini 3.8 Flash failed every pilot call on rate limits. gpt-oss-20b and Gemini 3 Flash, and Gemma 4, started but did not finish before free-tier daily quotas ran out; their partial replies are in the repository and not analysed. The Meta AI spot check and the prospective arm were not run.
+5. **Empty replies.** About a third of Qwen's first-run replies were empty because its reasoning used the whole 3,000-token budget. They were first graded as no warning in error, then removed from analysis, rerun with 8,000 tokens and regraded.
+6. **Lost runs.** The first main-arm run ended when the hosted runner lost contact after 3.4 hours, and a second run lost replies to a file-handling bug. Both were rerun; the runner skips prompts already answered.
+7. **Raw replies are public.** The pre-registration said recruitment messages would appear in the paper only as rates and short excerpts. The paper does that; the repository holds raw replies for reproducibility. The schemes are invented names or collapsed schemes, and a plain invitation message gives little uplift to a scammer.
 
 ## Appendix C. Limitations and Dual-Use / Ethical Considerations
 
-**Limitations.** The case set is small: 19 fraud versions and 11 legitimate ones, so confidence intervals are wide and per-case effects can drive results. Every prompt is in English, apart from one line of Pidgin in the pushback turn; Nigerian users often write in Pidgin, Yoruba, Hausa or Igbo, which may change model behaviour. Each prompt was sampled once at temperature 0. The tested models are mid-sized free-tier models; we did not test the largest closed models people use on WhatsApp or in apps, so the rates here are not those of any specific consumer product. The grader is itself an LLM; its agreement with the human majority was moderate, and the four humans disagreed with each other, so "warned" carries measurement error. Legitimate controls are not risk-free (a dollar fund can lose value), so some warnings on them are reasonable rather than false alarms; d′ treats them all as false alarms. Prompts are synthetic, written from documented pitches, not collected from real users.
+**Limitations.** The case set is small: 19 fraud and 11 legitimate versions, so intervals are wide and single cases can move results. Prompts are in English, apart from one line of Pidgin in the pushback turn. Each prompt was sampled once at temperature 0. We tested two mid-sized free-tier models, not the large closed models people use in apps, so rates here are not those of any consumer product. The grader is an LLM, with moderate agreement with the four-person majority, and the four humans disagreed with each other, so "warned" carries measurement error. Legitimate controls are not risk-free (a dollar fund can lose value), so some warnings on them are reasonable; d′ counts all as false alarms. Prompts are synthetic, written from documented pitches, not collected from users.
 
-**Dual-use and ethics.** The eval could be used to tune a model to write more persuasive scheme invitations without warnings. We judge this low risk: such messages are easy to write without a model, and the paper reports rates, not optimised prompts. Generated invitations appear only as short excerpts. No personal data was collected; volunteer labellers are identified by first name or nickname with their consent, and phrasings drawn from social media were paraphrased. Live platforms that have not collapsed are not named as frauds.
+**Dual-use and ethical considerations.** The eval could be used to tune a model to write more persuasive scheme invitations without warnings. We judge this low risk: such messages are easy to write without a model, and we report rates and short excerpts, not optimised prompts. No personal data was collected. Volunteer labellers agreed to be named. Phrasings drawn from social media were paraphrased. Live platforms that have not collapsed are not named as frauds. Real scheme names are used only for schemes with a documented collapse or regulatory action.
 
-**AI assistance.** The author designed the study, chose and checked the cases, labelled data and reviewed every section. An AI assistant (Claude) wrote most of the code and helped draft the text; all numbers come from scripts in the repository.
+## LLM Usage Statement
+
+Claude (Anthropic) wrote most of the analysis and run code and helped draft the text. The author chose the question and cases, checked every case against its source, labelled data and reviewed the paper. All numbers come from scripts in the repository, and the grader checks against human labels are reported in Section 4.1. The author asks reviewers to weigh the human-validation results rather than the prose.

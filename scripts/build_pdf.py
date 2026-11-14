@@ -106,7 +106,7 @@ while i < len(lines):
         continue
     elif l.strip() == "":
         flush()
-    elif l.startswith("**Faithful"):
+    elif l.startswith("**Faithful") or l.strip() == "With Apart Research":
         flush()
         story.append(Paragraph(inline(l), author))
     else:
