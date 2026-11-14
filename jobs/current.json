@@ -1,8 +1,8 @@
 {
- "name": "lane 1: three spare graders (gpt-oss-20b, gpt-oss-safeguard-20b, Gemini 3.5 Flash), validated on the human-labelled replies; grade pushback first, then main, then extra arms",
+ "name": "lane 1: Nebius gpt-oss-120b (paid with promo credit): validate on human-labelled replies, then grade pushback, main, extra arms",
  "kind": "chat",
  "max_tokens": 3000,
- "time_budget_min": 330,
+ "time_budget_min": 200,
  "stages": [
   {
    "pre": [
@@ -18,7 +18,7 @@
     ],
     [
      "scripts/build_grading.py",
-     "data/grading/d2c_push.jsonl",
+     "data/grading/nb_push.jsonl",
      "--results",
      "results/pushback.jsonl",
      "results/pushback_qwen.jsonl",
@@ -29,11 +29,12 @@
      "results/grades_pushback.jsonl",
      "results/grades_pushback_d2.jsonl",
      "results/grades_pushback_d2b.jsonl",
-     "results/grades_pushback_d2c.jsonl"
+     "results/grades_pushback_d2c.jsonl",
+     "results/grades_pushback_nb.jsonl"
     ],
     [
      "scripts/build_grading.py",
-     "data/grading/d2c_main.jsonl",
+     "data/grading/nb_main.jsonl",
      "--results",
      "results/main_qwen.jsonl",
      "results/main_qwen_redo.jsonl",
@@ -47,11 +48,12 @@
      "results/grades_main_v2.jsonl",
      "results/grades_main_d2.jsonl",
      "results/grades_main_d2b.jsonl",
-     "results/grades_main_d2c.jsonl"
+     "results/grades_main_d2c.jsonl",
+     "results/grades_main_nb.jsonl"
     ],
     [
      "scripts/build_grading.py",
-     "data/grading/d2c_rest.jsonl",
+     "data/grading/nb_rest.jsonl",
      "--results",
      "results/rest.jsonl",
      "--prompts",
@@ -62,7 +64,8 @@
      "results/grades_rest_v2.jsonl",
      "results/grades_rest_d2.jsonl",
      "results/grades_rest_d2b.jsonl",
-     "results/grades_rest_d2c.jsonl"
+     "results/grades_rest_d2c.jsonl",
+     "results/grades_rest_nb.jsonl"
     ]
    ],
    "targets": [
@@ -187,6 +190,36 @@
      "output": "results/grades_rest_d2c.jsonl"
     }
    ]
+  }
+ ],
+ "targets": [
+  {
+   "provider": "nebius",
+   "model": "openai/gpt-oss-120b",
+   "min_gap": 0.4,
+   "prompts": "data/grading/human40.jsonl",
+   "output": "results/grades_panel_pilot.jsonl"
+  },
+  {
+   "provider": "nebius",
+   "model": "openai/gpt-oss-120b",
+   "min_gap": 0.4,
+   "prompts": "data/grading/nb_push.jsonl",
+   "output": "results/grades_pushback_nb.jsonl"
+  },
+  {
+   "provider": "nebius",
+   "model": "openai/gpt-oss-120b",
+   "min_gap": 0.4,
+   "prompts": "data/grading/nb_main.jsonl",
+   "output": "results/grades_main_nb.jsonl"
+  },
+  {
+   "provider": "nebius",
+   "model": "openai/gpt-oss-120b",
+   "min_gap": 0.4,
+   "prompts": "data/grading/nb_rest.jsonl",
+   "output": "results/grades_rest_nb.jsonl"
   }
  ]
 }

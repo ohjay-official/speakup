@@ -241,7 +241,7 @@ main_res = {}
 for f in ("main_qwen", "main_qwen_redo", "main_gptoss", "main_gemini", "main_gemma", "main_flashlite"):
     main_res.update(latest(load(f"{R}/{f}.jsonl")))
 G = all_grades("grades_main.jsonl", "grades_main_l1.jsonl", "grades_main_l3.jsonl", "grades_main_v2.jsonl",
-               "grades_main_d2.jsonl", "grades_main_d2b.jsonl", "grades_main_d2c.jsonl")
+               "grades_main_d2.jsonl", "grades_main_d2b.jsonl", "grades_main_d2c.jsonl", "grades_main_nb.jsonl")
 rows = []
 for k, r in main_res.items():
     p = P.get(k[0])
@@ -398,7 +398,7 @@ push = latest(load(f"{R}/pushback.jsonl"))
 push.update(latest(load(f"{R}/pushback_l1.jsonl")))
 push.update(latest(load(f"{R}/pushback_qwen.jsonl")))
 GP = all_grades("grades_pushback.jsonl", "grades_pushback_l1.jsonl", "grades_pushback_d2.jsonl", "grades_pushback_d2b.jsonl",
-                 "grades_pushback_d2c.jsonl")
+                 "grades_pushback_d2c.jsonl", "grades_pushback_nb.jsonl")
 pb = defaultdict(list)
 for k, r in push.items():
     _, g = pick(GP.get(k, {}), r.get("ts", ""))
@@ -455,7 +455,7 @@ md.append("")
 
 # ---------------------------------------------------------------- anchor and generality arms
 PA = prompts("anchor", "general")
-GR = all_grades("grades_rest.jsonl", "grades_rest_v2.jsonl", "grades_rest_d2.jsonl", "grades_rest_d2b.jsonl", "grades_rest_d2c.jsonl")  # anchor + generality arms
+GR = all_grades("grades_rest.jsonl", "grades_rest_v2.jsonl", "grades_rest_d2.jsonl", "grades_rest_d2b.jsonl", "grades_rest_d2c.jsonl", "grades_rest_nb.jsonl")  # anchor + generality arms
 arm = defaultdict(list)
 for k, r in rest.items():
     p = PA.get(k[0])
